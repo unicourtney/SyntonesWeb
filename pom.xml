@@ -8,8 +8,6 @@
 	<name>syntones-web</name>
 	<description>Web Service for Syntones application</description>
 
-
-
 	<properties>
 		<springframework.version>4.1.1.RELEASE</springframework.version>
 	</properties>
@@ -131,6 +129,13 @@
 		</dependency>
 
 
+		<!-- GSON -->
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.7</version>
+		</dependency>
 
 
 	</dependencies>
