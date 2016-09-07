@@ -14,7 +14,7 @@ public class OneItemSetCount {
 	@Column(name = "track_id")
 	private String track_id;
 
-	@Column(name = "track_id")
+	@Column(name = "count")
 	private int count;
 
 	public OneItemSetCount() {
