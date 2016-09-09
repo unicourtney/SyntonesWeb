@@ -23,7 +23,7 @@
 	%>
 	<p> you are at the index page.</p>
 	<p> ${message}</p>
-	
+	<p> Please note: read the file first before saving.</p>
 	<form method="POST" enctype="multipart/form-data" action="upload">
 		File to upload: 
 		<input type="file" name="file"/><br>
