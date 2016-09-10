@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blackparty.syntones.core.MediaResource;
 import com.blackparty.syntones.model.Message;
+import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.response.SearchResponse;
+import com.blackparty.syntones.response.SongListResponse;
+import com.blackparty.syntones.service.SongService;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -16,21 +19,26 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 @RestController
 @Component
 public class NavigationEndpoint {
-
+	@Autowired
+	SongService songService;
+	
+	
 	@RequestMapping(value = "search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public SearchResponse search(@RequestBody String searchString) {
 		// wala pa ni siya gamit
@@ -48,6 +56,30 @@ public class NavigationEndpoint {
 		return "index";
 	}
 
+	
+	@RequestMapping(value = "/songList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public SongListResponse getSongs() {
+		SongListResponse slr = new SongListResponse();
+		System.out.println("Song list request is received");
+		Message message;
+		try{
+			List<Song> songList = songService.getAllSongs();
+			if(!songList.isEmpty()){
+				message = new Message("Fetching all song is successful.",true);
+			}else{
+				message = new Message("Query returns zero results.",true);
+			}
+			slr.setMessage(message);
+			slr.setSongList(songList);
+		}catch(Exception e){
+			e.printStackTrace();
+			message = new Message("Exception occured on the web service.", false);
+			slr.setMessage(message);
+			slr.setSongList(null);
+		}
+		return slr;
+	}
+	
 	@RequestMapping(value = "/listen", produces = "audio/mp3", method = RequestMethod.GET)
 	public Response listen(@HeaderParam("Range") String range) {
 		System.out.println("Received request to listen.");

@@ -57,19 +57,19 @@ public class AdminController {
 					System.out.println("cant read any tags on the given file");
 				} else {
 					// validate the information via net
-					Song songResult = new Song();
-					TrackSearcher ts = new TrackSearcher();
-					songResult = ts.search(song);
+					//Song songResult = new Song();
+					//TrackSearcher ts = new TrackSearcher();
+					//songResult = ts.search(song);
 
 					// extracting lyrics to the database
 					LyricsExtractor le = new LyricsExtractor();
-					List<String> lyrics = le.getSongLyrics(songResult.getArtistName(), songResult.getSongTitle());
+					List<String> lyrics = le.getSongLyrics(song.getArtistName(), song.getSongTitle());
 
 					System.out.println(lyrics);
 
-					mav.addObject("artistName", songResult.getArtistName());
-					mav.addObject("songTitle", songResult.getSongTitle());
-					request.getSession().setAttribute("song", songResult);
+					mav.addObject("artistName", song.getArtistName());
+					mav.addObject("songTitle", song.getSongTitle());
+					request.getSession().setAttribute("song", song);
 					request.getSession().setAttribute("lyrics", lyrics);
 					request.getSession().setAttribute("file",file);
 				}

@@ -37,7 +37,7 @@ public class UserDAO {
 	}
 
 	public User getUser(User query) throws Exception {
-		Session session = sf.openSession();
+		Session session = sf.openSession();	
 		Query q = session.createQuery("from User where username = :name");
 		q.setString("name", query.getUsername());
 		User fetchedUser = (User) q.uniqueResult();

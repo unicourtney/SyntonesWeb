@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blackparty.syntones.model.Message;
+import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.User;
 import com.blackparty.syntones.model.UserTransaction;
+import com.blackparty.syntones.response.PlaylistResponse;
+import com.blackparty.syntones.response.ProfileResponse;
 import com.blackparty.syntones.response.SongListResponse;
 import com.blackparty.syntones.service.UserService;
 
@@ -24,12 +27,30 @@ public class UserEndpoint {
 	@Autowired
 	UserService userService;
 
+	@RequestMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ProfileResponse showProfile(@RequestBody User user) {
+		System.out.println("profile request coming from: " + user.getUsername());
+		User fetchedUser = null;
+		Message message = new Message();
+		try {
+			fetchedUser = userService.getUser(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message.setFlag(false);
+			message.setMessage("runtime error happened on the web service.");
+			fetchedUser = null;
+		}
+		message.setFlag(true);
+		ProfileResponse profileResponse = new ProfileResponse(fetchedUser, message);
+		return profileResponse;
+	}
+
 	@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public User login(@RequestBody User user, HttpSession session, HttpServletRequest request) {
 		System.out.println("Login request is received coming from " + user.getUsername());
 		User fetchedUser = null;
 		try {
-			
+
 			fetchedUser = userService.authenticateUser(user);
 			System.out.println("fetchedUser: " + fetchedUser.toString());
 
@@ -42,10 +63,9 @@ public class UserEndpoint {
 			HttpSession newSession = request.getSession();
 			newSession.setAttribute("username", user.getUsername());
 			newSession.setAttribute("counter", 0);
-			
-			
-			
-			System.out.println("Session username: "+newSession.getAttribute("username")+" counter: "+newSession.getAttribute("counter"));
+
+			System.out.println("Session username: " + newSession.getAttribute("username") + " counter: "
+					+ newSession.getAttribute("counter"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,17 +85,16 @@ public class UserEndpoint {
 		return message;
 	}
 
-	@RequestMapping(value = "/songList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public SongListResponse getSongs(HttpServletRequest request) {
-		SongListResponse slr = new SongListResponse();
-		System.out.println("Song list request is received");
-		HttpSession session = request.getSession();
-		// fetching transaction details of the user
-		int counter = (int) session.getAttribute("counter") + 1;
-		String username = (String)session.getAttribute("username");
-		System.out.println("Checking " + username + "'s session counter: " + counter);
+	@RequestMapping(value = "/savePlaylist")
+	public PlaylistResponse savePlayList(@RequestBody Playlist playlist) {
+		PlaylistResponse playlistResponse = new PlaylistResponse();
+		System.out.println("received request to save a playlist from: " + playlist.getUser().getUsername());
+		
+		
+		
 
-		return slr;
+		return playlistResponse;
+
 	}
 
 }
