@@ -25,14 +25,10 @@ public class SongDAO {
 	
 	public ArrayList<Song> getAllSongs(String[] songIdList)throws Exception{
 		ArrayList<Song> songList = new ArrayList<Song>();
-		
 		//search all songs using the songId
 		for(String e:songIdList){
 			songList.add(getSong(e));
 		}
-		
-		
-		
 		return songList;
 	}
 	
@@ -41,13 +37,10 @@ public class SongDAO {
 		Artist fetchedArtist =  as.getArtist(song.getArtistName());
 		song.setArtist(fetchedArtist);
 		long songId = (Long)session.save(song);
-		
-		
 		//call mp3uploader to save a copy of the mp3 on the server side
 		long artistId = song.getArtist().getArtistId();
 		Mp3Uploader uploader = new Mp3Uploader();
 		uploader.upload(song.getFile(),songId,artistId);
-		
 		session.flush();
 		session.close();
 	}
@@ -57,6 +50,9 @@ public class SongDAO {
 		Query q = session.createQuery("from Song where song_id =:id");
 		q.setLong("id", Long.parseLong(songId));
 		Song song = (Song)q.uniqueResult();
+		System.out.println("song query: "+song.toString());
+		session.flush();
+		session.close();
 		return song;
 	}
 	
@@ -64,17 +60,7 @@ public class SongDAO {
 		Session session = sf.openSession();
 		Query q = session.createQuery("from Song");
 		List<Song> songList = q.list();
+		
 		return songList;
 	}
-	
-	
-
-	public List<Song> getAllSongsFromDb(){
-		Session session = sf.openSession();
-		Query query = session.createQuery("from Song");
-		return query.list();
-		
-	}
-
-	
 }

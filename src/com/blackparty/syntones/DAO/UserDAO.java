@@ -36,7 +36,7 @@ public class UserDAO {
 	}
 	
 	public User getUser(User user) throws Exception {
-		System.out.println("query for :"+user.getUsername());
+		System.out.println("Fetching personal information of :"+user.getUsername());
 		Session session = sf.openSession();	
 		Query q = session.createQuery("from User where username = :name");
 		q.setString("name", user.getUsername());

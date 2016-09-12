@@ -39,24 +39,13 @@ public class Song {
 
 	@Transient
 	private String artistName;
-
-	
-	@ManyToMany(cascade = CascadeType.ALL)
-	
-	@JoinTable(
-			name="song_playlist",
-			joinColumns={@JoinColumn(name="song_id")},
-			inverseJoinColumns={@JoinColumn(name="playlist_id")})
-	private Set<Playlist> playlists = new HashSet<Playlist>();
 	
 	@Transient
 	private int distance;
 
 	@Transient
 	private File file;
-	
-	
-	
+
 	// connects the song to the artist class
 
 	@ManyToOne(optional = false)
@@ -68,7 +57,6 @@ public class Song {
 
 	@Column(name = "file_path")
 	private String filePath;
-
 	
 	public Song() {
 
@@ -144,6 +132,17 @@ public class Song {
 
 	public File getFile(){
 		return file;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	public void setSongId(long songId) {
+		this.songId = songId;
 	}
 
 	@Override

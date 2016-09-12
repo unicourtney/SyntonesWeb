@@ -1,15 +1,9 @@
 package com.blackparty.syntones.endpoint;
 
-import java.util.ArrayList;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,14 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.blackparty.syntones.model.Message;
 
 import com.blackparty.syntones.model.Playlist;
-import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.User;
 import com.blackparty.syntones.model.UserTransaction;
 import com.blackparty.syntones.response.PlaylistResponse;
 import com.blackparty.syntones.response.ProfileResponse;
-import com.blackparty.syntones.response.SongListResponse;
-
-import com.blackparty.syntones.model.User;
 import com.blackparty.syntones.service.PlaylistService;
 import com.blackparty.syntones.service.SongService;
 import com.blackparty.syntones.service.UserService;
@@ -102,21 +92,23 @@ public class UserEndpoint {
 		return message;
 	}
 
-	@RequestMapping(value = "/savePlaylist")
+	@RequestMapping(value = "/savePlaylist",produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes=MediaType.APPLICATION_JSON_VALUE)
 	public PlaylistResponse savePlayList(@RequestBody Playlist playlist) {
 		PlaylistResponse playlistResponse = new PlaylistResponse();
 		System.out.println("received request to save a playlist from: " + playlist.getUser().getUsername());
 		String[] songIdList = playlist.getSongIdList();
+		System.out.println("songs to be saved: ");
 		for (String e : songIdList) {
 			System.out.println(e);
 		}
-		System.out.println(playlist.getUser().getUsername());
 		try {
-			ArrayList<Song> songList = songService.getAllSongs(songIdList);
 			playlistService.savePlaylist(playlist);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		Message message = new Message("", true);
+		playlistResponse.setMessage(message);
 		return playlistResponse;
 	}
 
