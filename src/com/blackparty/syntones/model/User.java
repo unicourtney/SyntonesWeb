@@ -77,7 +77,7 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public String getGender() {
 		return gender;
 	}
@@ -94,9 +94,15 @@ public class User {
 		this.dateOfBirth = dateOfBirth;
 	}
 
+<<<<<<< HEAD
+	
+	
+	
+=======
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", password=" + password + ", username=" + username + ", email=" + email + ", gender=" + gender + ", date_of_birth=" + dateOfBirth +"]";
 	}
 
+>>>>>>> c1718bd4f4259f3460c4e6ff6ec950bb948b858e
 }
