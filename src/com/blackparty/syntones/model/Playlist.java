@@ -1,16 +1,23 @@
 package com.blackparty.syntones.model;
 
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
+@Entity
+@Table(name="playlist_tbl")
 public class Playlist {
 
 	@Id
@@ -19,13 +26,16 @@ public class Playlist {
 	@Column(name="playlist_id")
 	private Long playListId;
 	
+	@Column(name="playlist_name")
+	private String playlistName;
+	
+	@ManyToMany(cascade=CascadeType.ALL, mappedBy="playlists")
+	private Set<Song> songs;
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(referencedColumnName = "user_id")
 	private User user;
 
-	
-	//private TracksOnPlaylist tracksOnPlaylist;
 	
 	@Transient
 	private List<Song> songList;
@@ -59,4 +69,28 @@ public class Playlist {
 		this.songIdList = songIdList;
 	}
 
+	public Long getPlayListId() {
+		return playListId;
+	}
+
+	public void setPlayListId(Long playListId) {
+		this.playListId = playListId;
+	}
+
+	public String getPlaylistName() {
+		return playlistName;
+	}
+
+	public void setPlaylistName(String playlistName) {
+		this.playlistName = playlistName;
+	}
+
+	public Set<Song> getSongs() {
+		return songs;
+	}
+
+	public void setSongs(Set<Song> songs) {
+		this.songs = songs;
+	}
+	
 }
