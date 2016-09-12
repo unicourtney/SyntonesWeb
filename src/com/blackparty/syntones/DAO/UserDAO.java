@@ -41,6 +41,9 @@ public class UserDAO {
 		Query q = session.createQuery("from User where username = :name");
 		q.setString("name", query.getUsername());
 		User fetchedUser = (User) q.uniqueResult();
+		if(fetchedUser == null){
+			return null;
+		}
 		System.out.println("Unique result :"+fetchedUser.toString());
 		return fetchedUser;
 	}
