@@ -33,8 +33,7 @@ public class TrackSearcher {
             URL url = new URL(searchTrack);
             URLConnection urlc = url.openConnection();
             urlc.setDoOutput(true);
-            BufferedReader br = new BufferedReader(new InputStreamReader(urlc
-                    .getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
             String l = null;
             String result = "";
             while ((l = br.readLine()) != null) {
@@ -126,7 +125,6 @@ public class TrackSearcher {
 
         } catch (NoSuchElementException e) {
             //nothing to do here yet. mag exceptin tungod kay ang linkedlist na hurot samtang nag "pop" siya..
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

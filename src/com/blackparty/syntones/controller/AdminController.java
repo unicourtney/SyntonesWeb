@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,6 +23,8 @@ import com.blackparty.syntones.service.ArtistService;
 import com.blackparty.syntones.service.SongService;
 
 @Controller
+
+@RequestMapping("/admin")
 
 public class AdminController {
 	@Autowired
@@ -57,19 +60,19 @@ public class AdminController {
 					System.out.println("cant read any tags on the given file");
 				} else {
 					// validate the information via net
-					Song songResult = new Song();
-					TrackSearcher ts = new TrackSearcher();
-					songResult = ts.search(song);
+					//Song songResult = new Song();
+					//TrackSearcher ts = new TrackSearcher();
+					//songResult = ts.search(song);
 
 					// extracting lyrics to the database
 					LyricsExtractor le = new LyricsExtractor();
-					List<String> lyrics = le.getSongLyrics(songResult.getArtistName(), songResult.getSongTitle());
+					List<String> lyrics = le.getSongLyrics(song.getArtistName(), song.getSongTitle());
 
 					System.out.println(lyrics);
 
-					mav.addObject("artistName", songResult.getArtistName());
-					mav.addObject("songTitle", songResult.getSongTitle());
-					request.getSession().setAttribute("song", songResult);
+					mav.addObject("artistName", song.getArtistName());
+					mav.addObject("songTitle", song.getSongTitle());
+					request.getSession().setAttribute("song", song);
 					request.getSession().setAttribute("lyrics", lyrics);
 					request.getSession().setAttribute("file",file);
 				}
@@ -93,6 +96,20 @@ public class AdminController {
 			e.printStackTrace();
 		}
 
+		return mav;
+	}
+	
+	@RequestMapping(value="/songList",method=RequestMethod.GET)
+	public ModelAndView showSongList(){
+		ModelAndView mav = new ModelAndView("songList");
+		//return lists of songs to the database;
+		try{
+			List<Song> songList= ss.getAllSongs();
+			mav.addObject("songList", songList);
+		}catch(Exception e){
+			e.printStackTrace();
+			mav.addObject("system_message", "there is an error when fetching to the database.");
+		}
 		return mav;
 	}
 
