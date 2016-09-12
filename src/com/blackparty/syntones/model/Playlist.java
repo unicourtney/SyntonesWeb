@@ -25,7 +25,7 @@ public class Playlist {
 	private User user;
 
 	
-	private TracksOnPlaylist tracksOnPlaylist;
+	//private TracksOnPlaylist tracksOnPlaylist;
 	
 	@Transient
 	private List<Song> songList;
