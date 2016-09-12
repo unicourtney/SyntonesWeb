@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
+
 public class Playlist {
 
 	@Id

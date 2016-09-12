@@ -6,7 +6,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.blackparty.syntones.model.Message;
 import com.blackparty.syntones.model.User;
 
@@ -28,10 +27,7 @@ public class UserDAO {
 			session.flush();
 			session.close();
 			message.setFlag(true);
-<<<<<<< HEAD
 			message.setMessage(user.getUsername()+" is succesfully added.");
-=======
->>>>>>> master
 		} else {
 			message.setMessage("username is already existed.");
 			message.setFlag(false);
@@ -39,20 +35,14 @@ public class UserDAO {
 		return message;
 	}
 
-	public User getUser(User query) throws Exception {
-<<<<<<< HEAD
+	public User getUser(User user) throws Exception {
+		System.out.println("query for :"+user.getUsername());
 		Session session = sf.openSession();	
 		Query q = session.createQuery("from User where username = :name");
-		q.setString("name", query.getUsername());
+		q.setString("name", user.getUsername());
 		User fetchedUser = (User) q.uniqueResult();
 		System.out.println("Unique result :"+fetchedUser.toString());
-=======
-		Session session = sf.openSession();
-		Query q = session.createQuery("from User where username = :name");
-		q.setString("name", query.getUsername());
-		User fetchedUser = (User) q.uniqueResult();
-		
->>>>>>> master
+
 		return fetchedUser;
 	}
 }

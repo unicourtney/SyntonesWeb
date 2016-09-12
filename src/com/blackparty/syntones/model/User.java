@@ -9,35 +9,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 @Entity
-<<<<<<< HEAD
-@Table(name="user_tbl")
-public class User {
-	
-	@Id
-	@Column(name="user_id")
-	@TableGenerator(name = "table_gen", table = "sequence_table", pkColumnName = "seq_name", valueColumnName = "seq_count", pkColumnValue = "user_seq")
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "table_gen")
-	private long userId;
-	
-	
-	@Column(name="username")
-	private String username;
-	@Column(name="password")
-	private String password;
-	
-	
-	public User(){}
-	public User(String username){
-		this.username = username;
-	}
-	public User(String username,String password){
-		this.username = username;
-		this.password = password;
-	}
-
-	
-	
-=======
 @Table(name = "user_tbl")
 public class User {
 
@@ -75,7 +46,6 @@ public class User {
 		this.gender = gender;
 	}
 
->>>>>>> master
 	public long getUserId() {
 		return userId;
 	}
@@ -100,14 +70,6 @@ public class User {
 		this.password = password;
 	}
 
-<<<<<<< HEAD
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", username=" + username + ", password=" + password + "]";
-	}
-	
-	
-=======
 	public String getEmail() {
 		return email;
 	}
@@ -115,7 +77,7 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public String getGender() {
 		return gender;
 	}
@@ -132,10 +94,7 @@ public class User {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email + ", gender=" + gender + ", date_of_birth=" + dateOfBirth +"]";
-	}
-
->>>>>>> master
+	
+	
+	
 }
