@@ -33,7 +33,6 @@ public class PlaylistDAO {
 		
 		//fetch details for the song
 		List<Song> songList = songService.getAllSongs(playlist.getSongIdList());
-		playlist.setSongList(songList);
 		
 		Session session = sessionFactory.openSession();
 		session.save(playlist);
