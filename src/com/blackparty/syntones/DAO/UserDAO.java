@@ -28,6 +28,10 @@ public class UserDAO {
 			session.flush();
 			session.close();
 			message.setFlag(true);
+<<<<<<< HEAD
+			message.setMessage(user.getUsername()+" is succesfully added.");
+=======
+>>>>>>> master
 		} else {
 			message.setMessage("username is already existed.");
 			message.setFlag(false);
@@ -36,11 +40,19 @@ public class UserDAO {
 	}
 
 	public User getUser(User query) throws Exception {
+<<<<<<< HEAD
+		Session session = sf.openSession();	
+		Query q = session.createQuery("from User where username = :name");
+		q.setString("name", query.getUsername());
+		User fetchedUser = (User) q.uniqueResult();
+		System.out.println("Unique result :"+fetchedUser.toString());
+=======
 		Session session = sf.openSession();
 		Query q = session.createQuery("from User where username = :name");
 		q.setString("name", query.getUsername());
 		User fetchedUser = (User) q.uniqueResult();
 		
+>>>>>>> master
 		return fetchedUser;
 	}
 }

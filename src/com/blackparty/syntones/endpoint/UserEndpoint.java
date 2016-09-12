@@ -1,6 +1,14 @@
 package com.blackparty.syntones.endpoint;
 
+<<<<<<< HEAD
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
+=======
+import org.springframework.beans.factory.annotation.Autowired;
+>>>>>>> master
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,7 +17,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blackparty.syntones.model.Message;
+<<<<<<< HEAD
+import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.User;
+import com.blackparty.syntones.model.UserTransaction;
+import com.blackparty.syntones.response.PlaylistResponse;
+import com.blackparty.syntones.response.ProfileResponse;
+import com.blackparty.syntones.response.SongListResponse;
+=======
+import com.blackparty.syntones.model.User;
+>>>>>>> master
 import com.blackparty.syntones.service.UserService;
 
 @RestController
@@ -18,6 +35,48 @@ public class UserEndpoint {
 	@Autowired
 	UserService userService;
 
+<<<<<<< HEAD
+	@RequestMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ProfileResponse showProfile(@RequestBody User user) {
+		System.out.println("profile request coming from: " + user.getUsername());
+		User fetchedUser = null;
+		Message message = new Message();
+		try {
+			fetchedUser = userService.getUser(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message.setFlag(false);
+			message.setMessage("runtime error happened on the web service.");
+			fetchedUser = null;
+		}
+		message.setFlag(true);
+		ProfileResponse profileResponse = new ProfileResponse(fetchedUser, message);
+		return profileResponse;
+	}
+
+	@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+	public User login(@RequestBody User user, HttpSession session, HttpServletRequest request) {
+		System.out.println("Login request is received coming from " + user.getUsername());
+		User fetchedUser = null;
+		try {
+
+			fetchedUser = userService.authenticateUser(user);
+			System.out.println("fetchedUser: " + fetchedUser.toString());
+
+			// creates user's transaction
+			UserTransaction userTransaction = new UserTransaction();
+			userTransaction.setUser(fetchedUser);
+
+			// creates session
+			session.invalidate();
+			HttpSession newSession = request.getSession();
+			newSession.setAttribute("username", user.getUsername());
+			newSession.setAttribute("counter", 0);
+
+			System.out.println("Session username: " + newSession.getAttribute("username") + " counter: "
+					+ newSession.getAttribute("counter"));
+		} catch (Exception e) {
+=======
 	@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
 	public User login(@RequestBody User user) {
 		System.out.println("Login request is received coming from " + user.getUsername());
@@ -26,6 +85,7 @@ public class UserEndpoint {
 			fetchedUser = userService.authenticateUser(user);
 			System.out.println("fetchedUser: "+fetchedUser.toString());
 		}catch(Exception e){
+>>>>>>> master
 			e.printStackTrace();
 		}
 		return fetchedUser;
@@ -35,6 +95,27 @@ public class UserEndpoint {
 	public Message register(@RequestBody User user) {
 		Message message = new Message();
 		System.out.println("Register request is received coming from " + user.getUsername());
+<<<<<<< HEAD
+
+		try {
+			message = userService.addUser(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return message;
+	}
+
+	@RequestMapping(value = "/savePlaylist")
+	public PlaylistResponse savePlayList(@RequestBody Playlist playlist) {
+		PlaylistResponse playlistResponse = new PlaylistResponse();
+		System.out.println("received request to save a playlist from: " + playlist.getUser().getUsername());
+		
+		
+		
+
+		return playlistResponse;
+
+=======
 		
 		try{
 			message = userService.addUser(user);
@@ -43,6 +124,7 @@ public class UserEndpoint {
 		}
 
 		return message;
+>>>>>>> master
 	}
 
 }

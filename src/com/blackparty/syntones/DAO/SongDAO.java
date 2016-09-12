@@ -3,7 +3,9 @@ package com.blackparty.syntones.DAO;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,13 @@ public class SongDAO {
 		
 		session.flush();
 		session.close();
+	}
+	
+	public List<Song> getAllSongs() throws Exception{
+		Session session = sf.openSession();
+		Query q = session.createQuery("from Song");
+		List<Song> songList = q.list();
+		return songList;
 	}
 	
 	

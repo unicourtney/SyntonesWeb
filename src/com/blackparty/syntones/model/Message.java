@@ -26,10 +26,13 @@ public class Message {
 		this.flag = flag;
 	}
 	
+<<<<<<< HEAD
+=======
 	public Message(long counter,String message){
 		this.counter = counter;
 		this.message = message;
 	}
+>>>>>>> master
 	public Message(long counter, String message,boolean flag){
 		this.message = message;
 		this.counter = counter;
