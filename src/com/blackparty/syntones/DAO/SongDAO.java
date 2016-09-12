@@ -68,5 +68,13 @@ public class SongDAO {
 	}
 	
 	
+
+	public List<Song> getAllSongsFromDb(){
+		Session session = sf.openSession();
+		Query query = session.createQuery("from Song");
+		return query.list();
+		
+	}
+
 	
 }
