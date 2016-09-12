@@ -1,5 +1,7 @@
 package com.blackparty.syntones.endpoint;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -16,6 +18,7 @@ import com.blackparty.syntones.model.Message;
 import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.User;
 import com.blackparty.syntones.model.UserTransaction;
+import com.blackparty.syntones.response.LoginResponse;
 import com.blackparty.syntones.response.PlaylistResponse;
 import com.blackparty.syntones.response.ProfileResponse;
 import com.blackparty.syntones.service.PlaylistService;
@@ -52,31 +55,26 @@ public class UserEndpoint {
 	}
 
 	@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public User login(@RequestBody User user, HttpSession session, HttpServletRequest request) {
+	public LoginResponse login(@RequestBody User user, HttpSession session, HttpServletRequest request) {
+		LoginResponse loginResponse = new LoginResponse();
 		System.out.println("Login request is received coming from " + user.getUsername());
-		User fetchedUser = null;
+		Message message = new Message();
 		try {
-
-			fetchedUser = userService.authenticateUser(user);
-			System.out.println("fetchedUser: " + fetchedUser.toString());
-
-			// creates user's transaction
-			UserTransaction userTransaction = new UserTransaction();
-			userTransaction.setUser(fetchedUser);
-
-			// creates session
-			session.invalidate();
-			HttpSession newSession = request.getSession();
-			newSession.setAttribute("username", user.getUsername());
-			newSession.setAttribute("counter", 0);
-
-			System.out.println("Session username: " + newSession.getAttribute("username") + " counter: "
-					+ newSession.getAttribute("counter"));
+			message = userService.authenticateUser(user);
+			if(message.getFlag()){
+				//get recently played playlists..
+				List<Playlist> playlists = playlistService.getPlaylist(user);
+				if(playlists != null){
+					loginResponse.setRecentPlaylistsPlayed(playlists);
+				}else{
+					loginResponse.setRecentPlaylistsPlayed(null);
+				}
+			}
+			loginResponse.setMessage(message);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return fetchedUser;
+		return loginResponse;
 	}
 
 	@RequestMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
