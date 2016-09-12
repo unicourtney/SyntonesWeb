@@ -1,6 +1,7 @@
 package com.blackparty.syntones.service;
 
 import java.io.File;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,5 +18,8 @@ public class SongService {
 	
 	public void addSong(Song song) throws Exception{
 		songDao.addSong(song);
+	}
+	public List<Song> getAllSongsFromDb(){
+		return songDao.getAllSongsFromDb();
 	}
 }
