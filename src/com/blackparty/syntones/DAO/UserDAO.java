@@ -34,15 +34,16 @@ public class UserDAO {
 		}
 		return message;
 	}
-
+	
 	public User getUser(User user) throws Exception {
 		System.out.println("query for :"+user.getUsername());
 		Session session = sf.openSession();	
 		Query q = session.createQuery("from User where username = :name");
 		q.setString("name", user.getUsername());
 		User fetchedUser = (User) q.uniqueResult();
-		System.out.println("Unique result :"+fetchedUser.toString());
-
+		if(fetchedUser != null){
+			System.out.println("Unique result :"+fetchedUser.toString());
+		}
 		return fetchedUser;
 	}
 }

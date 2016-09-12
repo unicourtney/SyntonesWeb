@@ -3,6 +3,7 @@ package com.blackparty.syntones.DAO;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -22,7 +23,18 @@ public class SongDAO {
 	@Autowired private SessionFactory sf;
 	@Autowired private ArtistService as;
 	
-	
+	public ArrayList<Song> getAllSongs(String[] songIdList)throws Exception{
+		ArrayList<Song> songList = new ArrayList<Song>();
+		
+		//search all songs using the songId
+		for(String e:songIdList){
+			songList.add(getSong(e));
+		}
+		
+		
+		
+		return songList;
+	}
 	
 	public void addSong(Song song)throws Exception{
 		Session session = sf.openSession();
@@ -38,6 +50,14 @@ public class SongDAO {
 		
 		session.flush();
 		session.close();
+	}
+	
+	public Song getSong(String songId)throws Exception{
+		Session session = sf.openSession();
+		Query q = session.createQuery("from Song where song_id =:id");
+		q.setLong("id", Long.parseLong(songId));
+		Song song = (Song)q.uniqueResult();
+		return song;
 	}
 	
 	public List<Song> getAllSongs() throws Exception{

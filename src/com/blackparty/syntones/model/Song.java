@@ -3,14 +3,19 @@ package com.blackparty.syntones.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -35,11 +40,22 @@ public class Song {
 	@Transient
 	private String artistName;
 
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	
+	@JoinTable(
+			name="song_playlist",
+			joinColumns={@JoinColumn(name="song_id")},
+			inverseJoinColumns={@JoinColumn(name="playlist_id")})
+	private Set<Playlist> playlists = new HashSet<Playlist>();
+	
 	@Transient
 	private int distance;
 
 	@Transient
 	private File file;
+	
+	
 	
 	// connects the song to the artist class
 
@@ -129,9 +145,13 @@ public class Song {
 	public File getFile(){
 		return file;
 	}
+
 	@Override
 	public String toString() {
-		return "Song [songTitle=" + songTitle + ", artistName=" + artistName + "]";
+		return "Song [songId=" + songId + ", songTitle=" + songTitle + ", artist= " + artist.getArtistName() + "]";
 	}
+
+	
+	
 
 }
