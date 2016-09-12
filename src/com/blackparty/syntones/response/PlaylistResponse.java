@@ -1,16 +1,22 @@
 package com.blackparty.syntones.response;
 
+import java.util.List;
+
 import com.blackparty.syntones.model.Message;
 import com.blackparty.syntones.model.Playlist;
+import com.blackparty.syntones.model.Song;
 
 public class PlaylistResponse {
 	private Message message;
-	private Playlist playlist;
+	private List<Playlist> playlists;
 	
 	
 	public PlaylistResponse(){}
-	public PlaylistResponse(Playlist playlist, Message message){
-		this.playlist = playlist;
+	public PlaylistResponse(List<Playlist> playlists){
+		this.playlists = playlists;
+	}
+	public PlaylistResponse(List<Playlist> playlists, Message message){
+		this.playlists = playlists;
 		this.message = message;
 	}
 	public Message getMessage() {
@@ -19,11 +25,11 @@ public class PlaylistResponse {
 	public void setMessage(Message message) {
 		this.message = message;
 	}
-	public Playlist getPlaylist() {
-		return playlist;
+	public List<Playlist> getPlaylists() {
+		return playlists;
 	}
-	public void setPlaylist(Playlist playlist) {
-		this.playlist = playlist;
+	public void setPlaylists(List<Playlist> playlists) {
+		this.playlists = playlists;
 	}
 	
 }
