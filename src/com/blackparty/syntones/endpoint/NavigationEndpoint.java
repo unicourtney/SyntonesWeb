@@ -12,6 +12,7 @@ import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.User;
 import com.blackparty.syntones.response.PlaylistResponse;
+import com.blackparty.syntones.response.PlaylistSongsResponse;
 import com.blackparty.syntones.response.SearchResponse;
 import com.blackparty.syntones.response.SongListResponse;
 import com.blackparty.syntones.service.PlaylistService;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -137,5 +139,25 @@ public class NavigationEndpoint {
 		
 		return Rresponse;
 	}
-
+	@RequestMapping(value="/playlistSong",
+			method=RequestMethod.POST,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces=MediaType.APPLICATION_JSON_VALUE)
+	public PlaylistSongsResponse playlistSong(@RequestBody Map<String,String> data){
+		PlaylistSongsResponse playlistSongsResponse = new PlaylistSongsResponse();
+		System.out.println("Received playlist-song request from: "+data.get("username"));
+		
+		long id = Long.parseLong(data.get("id"));
+		Message message = new Message();
+		try{
+			playlistSongsResponse.setSongsOnPlaylist( playlistService.getSongsFromPlaylist(id));
+			message.setFlag(true);
+		}catch(Exception e){
+			e.printStackTrace();
+			message.setFlag(false);
+			message.setMessage("Error occured on the webservice");
+		}
+		playlistSongsResponse.setMessage(message);
+		return playlistSongsResponse;
+	}
 }

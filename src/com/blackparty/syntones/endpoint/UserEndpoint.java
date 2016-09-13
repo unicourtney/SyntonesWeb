@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.blackparty.syntones.model.Message;
 
 import com.blackparty.syntones.model.Playlist;
+import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.User;
 import com.blackparty.syntones.model.UserTransaction;
 import com.blackparty.syntones.response.LoginResponse;
@@ -65,9 +66,9 @@ public class UserEndpoint {
 				//get recently played playlists..
 				List<Playlist> playlists = playlistService.getPlaylist(user);
 				if(playlists != null){
-					loginResponse.setRecentPlaylistsPlayed(playlists);
+					loginResponse.setRecentlyPlayedPlaylists(playlists);
 				}else{
-					loginResponse.setRecentPlaylistsPlayed(null);
+					loginResponse.setRecentlyPlayedPlaylists(null);
 				}
 			}
 			loginResponse.setMessage(message);

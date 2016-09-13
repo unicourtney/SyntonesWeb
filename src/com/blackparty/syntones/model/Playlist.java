@@ -23,7 +23,7 @@ public class Playlist {
 	@TableGenerator(name = "table_gen", table = "sequence_table", pkColumnName = "seq_name", valueColumnName = "seq_count", pkColumnValue = "play_list_seq")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "table_gen")
 	@Column(name="playlist_id")
-	private Long playlistId;
+	private long playlistId;
 	
 	@Column(name="playlist_name")
 	private String playlistName;

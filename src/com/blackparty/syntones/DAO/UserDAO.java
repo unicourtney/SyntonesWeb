@@ -44,6 +44,8 @@ public class UserDAO {
 		if(fetchedUser != null){
 			System.out.println("Unique result :"+fetchedUser.toString());
 		}
+		session.flush();
+		session.close();
 		return fetchedUser;
 	}
 }

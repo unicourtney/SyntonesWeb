@@ -9,16 +9,17 @@ import com.blackparty.syntones.model.User;
 
 public class LoginResponse {
 	
+	
+	
 	private Message message;
-	private List<Playlist> recentPlaylistsPlayed;
+	private List<Playlist> recentlyPlayedPlaylists;
 	
 	public LoginResponse(){}
 
 	
-	public LoginResponse(User user,Message message, List<Playlist> recentPlaylistsPlayed){
+	public LoginResponse(User user, Message message, List<Playlist> recentlyPlayedPlaylists){
 		this.message = message;
-		this.recentPlaylistsPlayed = recentPlaylistsPlayed;
-		
+		this.recentlyPlayedPlaylists = recentlyPlayedPlaylists;
 	}
 	
 	
@@ -30,13 +31,14 @@ public class LoginResponse {
 		this.message = message;
 	}
 
-	public List<Playlist> getRecentPlaylistsPlayed() {
-		return recentPlaylistsPlayed;
+	public List<Playlist> getRecentlyPlayedPlaylists() {
+		return recentlyPlayedPlaylists;
 	}
 
-	public void setRecentPlaylistsPlayed(List<Playlist> recentPlaylistsPlayed) {
-		this.recentPlaylistsPlayed = recentPlaylistsPlayed;
+	public void setRecentlyPlayedPlaylists(List<Playlist> recentPlaylistsPlayed) {
+		this.recentlyPlayedPlaylists = recentPlaylistsPlayed;
 	}
-	
+
+
 		
 }
