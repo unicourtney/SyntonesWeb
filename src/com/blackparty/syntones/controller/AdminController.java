@@ -25,7 +25,10 @@ import com.blackparty.syntones.service.ArtistService;
 import com.blackparty.syntones.service.SongService;
 
 @Controller
+
+
 @RequestMapping("/admin")
+
 public class AdminController {
 	@Autowired
 	ArtistService as;
