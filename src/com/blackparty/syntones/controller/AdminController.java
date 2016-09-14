@@ -4,9 +4,11 @@ import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -109,6 +111,16 @@ public class AdminController {
 			mav.addObject("system_message", "there is an error when fetching to the database.");
 		}
 		return mav;
+	}
+	
+	//Association Rule
+	@RequestMapping(value = "/songPlay", method = RequestMethod.GET)
+	public String viewAllSongs(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
+		System.out.println("-- PLAY SONG --");
+
+		int id = Integer.parseInt(request.getParameter("id"));
+		return "playSong";
+
 	}
 
 }

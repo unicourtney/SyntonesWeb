@@ -69,6 +69,10 @@ public class NavigationEndpoint {
 			}else{
 				message = new Message("Query returns zero results.",true);
 			}
+			
+			for(Song s : songList){
+				System.out.println(s.toString());
+			}
 			slr.setMessage(message);
 			slr.setSongList(songList);
 		}catch(Exception e){

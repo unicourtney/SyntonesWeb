@@ -20,10 +20,10 @@ public class ArController {
 	private SongService ss;
 
 	@RequestMapping(value = "/playIt")
-	public String viewAllSongs(HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+	public String viewAllSongs(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
 		System.out.println("-- VIEW SONG LIST --");
 
-		List<Song> song_list = ss.getAllSongsFromDb();
+		List<Song> song_list = ss.getAllSongs();
 
 		map.addAttribute("songList", song_list);
 		return "playSong";
