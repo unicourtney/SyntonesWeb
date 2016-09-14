@@ -95,4 +95,10 @@ public class User {
 	}
 
 
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", password=" + password + ", username=" + username + ", email=" + email + ", gender=" + gender + ", date_of_birth=" + dateOfBirth +"]";
+	}
+
+
 }

@@ -1,8 +1,6 @@
 package com.blackparty.syntones.model;
 
 import java.util.List;
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -24,25 +23,38 @@ public class Playlist {
 	@TableGenerator(name = "table_gen", table = "sequence_table", pkColumnName = "seq_name", valueColumnName = "seq_count", pkColumnValue = "play_list_seq")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "table_gen")
 	@Column(name="playlist_id")
-	private Long playListId;
+	private long playlistId;
 	
 	@Column(name="playlist_name")
 	private String playlistName;
 	
-	@ManyToMany(cascade=CascadeType.ALL, mappedBy="playlists")
-	private Set<Song> songs;
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name="playlist_song",joinColumns=@JoinColumn(name="playlist_id"),inverseJoinColumns=@JoinColumn(name="song_id"))
+	private List<Song> songs;
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(referencedColumnName = "user_id")
 	private User user;
 	
 	@Transient
-	private List<Song> songList;
-	@Transient
 	private String[] songIdList;
 
-	public Playlist() {
+	public Playlist(){
+		
 	}
+	
+	
+	
+	public Playlist(Long playlistId, String playlistName, List<Song> songs, User user, String[] songIdList) {
+		super();
+		this.playlistId = playlistId;
+		this.playlistName = playlistName;
+		this.songs = songs;
+		this.user = user;
+		this.songIdList = songIdList;
+	}
+
+
 
 	public User getUser() {
 		return user;
@@ -50,14 +62,6 @@ public class Playlist {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public List<Song> getSongList() {
-		return songList;
-	}
-
-	public void setSongList(List<Song> songList) {
-		this.songList = songList;
 	}
 
 	public String[] getSongIdList() {
@@ -68,12 +72,12 @@ public class Playlist {
 		this.songIdList = songIdList;
 	}
 
-	public Long getPlayListId() {
-		return playListId;
+	public Long getPlaylistId() {
+		return playlistId;
 	}
 
 	public void setPlayListId(Long playListId) {
-		this.playListId = playListId;
+		this.playlistId = playListId;
 	}
 
 	public String getPlaylistName() {
@@ -84,12 +88,33 @@ public class Playlist {
 		this.playlistName = playlistName;
 	}
 
-	public Set<Song> getSongs() {
+
+	
+
+	public void setPlaylistId(Long playlistId) {
+		this.playlistId = playlistId;
+	}
+
+
+
+	public List<Song> getSongs() {
 		return songs;
 	}
 
-	public void setSongs(Set<Song> songs) {
+
+
+	public void setSongs(List<Song> songs) {
 		this.songs = songs;
 	}
+
+
+
+	@Override
+	public String toString() {
+		return "Playlist [playlistId=" + playlistId + ", playlistName=" + playlistName + ", songs=" + songs + "]";
+	}
+
 	
+	
+
 }
