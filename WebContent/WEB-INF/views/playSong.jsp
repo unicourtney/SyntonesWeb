@@ -11,6 +11,7 @@
 
 	<h1>SONG LIST !</h1>
 
+
 	<table>
 		<tr>
 			<td>ID</td>
@@ -24,13 +25,16 @@
 				<td>
 					<button>
 						<a
-							href="${pageContext.request.contextPath}/admin/songPlay?id=${song.songId}">Button
-							Text</a>
+							href="${pageContext.request.contextPath}/viewSong?id=${song.songId}">></a>
 					</button>
 				</td>
 			</tr>
 		</c:forEach>
 	</table>
 
+	<button>
+		<a
+			href="${pageContext.request.contextPath}/admin/arRecom">Association Rule</a>
+	</button>
 </body>
 </html>

@@ -2,6 +2,8 @@ package com.blackparty.syntones.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,7 +12,9 @@ import javax.persistence.Table;
 public class TwoItemSet {
 
 	@Id
-	
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
 	@Column(name = "track_id")
 	private String track_id;
 
@@ -23,11 +27,13 @@ public class TwoItemSet {
 	@Column(name = "recom_song")
 	private String recom_song;
 
-	public TwoItemSet() {
+	public TwoItemSet(String track_id, int count) {
 		super();
+		this.track_id = track_id;
+		this.count = count;
 	}
 
-	public TwoItemSet(String track_id, int count, float confidence, String recom_song) {
+	public TwoItemSet(String track_id, String recom_song, int count, float confidence) {
 		super();
 		this.track_id = track_id;
 		this.count = count;
