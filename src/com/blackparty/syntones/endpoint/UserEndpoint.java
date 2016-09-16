@@ -98,9 +98,9 @@ public class UserEndpoint {
 		System.out.println("received request to save a playlist from: " + playlist.getUser().getUsername());
 		String[] songIdList = playlist.getSongIdList();
 		System.out.println("songs to be saved: ");
-		for (String e : songIdList) {
-			System.out.println(e);
-		}
+//		for (String e : songIdList) {
+//			System.out.println(e);
+//		}
 		try {
 			playlistService.savePlaylist(playlist);
 		} catch (Exception e) {

@@ -12,9 +12,18 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<form role="form"
+		action="${pageContext.request.contextPath}/playThisSong" method="POST">
+		<p>${songId}</p>
+		<input type="hidden" value="${songId}" name="song_id" /> <select
+			name="session_id">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
 
-	<p>you are in the song info</p>
-	<p>audio should be playing right now..</p>
+		</select>
+		<button type="submit">Play</button>
+	</form>
 
 </body>
 </html>
