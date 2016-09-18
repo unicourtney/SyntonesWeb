@@ -27,8 +27,10 @@ import com.blackparty.syntones.model.PlayedSongs;
 import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.ThreeItemSet;
 import com.blackparty.syntones.model.ThreeItemSetCombo;
+import com.blackparty.syntones.model.ThreeItemSetRecomSong;
 import com.blackparty.syntones.model.TwoItemSet;
 import com.blackparty.syntones.model.TwoItemSetCombo;
+import com.blackparty.syntones.model.TwoItemSetRecomSong;
 import com.blackparty.syntones.service.ArtistService;
 import com.blackparty.syntones.service.PlayedSongsService;
 import com.blackparty.syntones.service.SongService;
@@ -144,25 +146,48 @@ public class AdminController {
 		ArrayList<OneItemSetCount> one_item_set_count_list = ar.getOneItemCount(session_id_list, oneItemBasket,
 				played_songs_list, track_id_list);
 
-		// playedSongsService.insertOneItemSetCount(one_item_set_count_list);
+		if (playedSongsService.getOneItemSetCount().isEmpty()) {
+			playedSongsService.insertOneItemSetCount(one_item_set_count_list);
+		}
 
 		ArrayList<TwoItemSetCombo> two_item_set_combo_list = ar.getTwoItemCombo(track_id_list);
 
 		int[][] twoItemBasket = ar.getTwoItemBasket(two_item_set_combo_list, oneItemBasket, track_id_list,
 				session_id_list);
 
-		System.out.println("TWO ITEM SET");
 		ArrayList<TwoItemSet> two_item_set_list = ar.getTwoItemSet(one_item_set_count_list, track_id_list,
 				twoItemBasket, two_item_set_combo_list, session_id_list);
-		// playedSongsService.insertTwoItemSet(two_item_set_list);
+
+		if (playedSongsService.getTwoItemSet().isEmpty()) {
+			playedSongsService.insertTwoItemSet(two_item_set_list);
+		}
 
 		ArrayList<ThreeItemSetCombo> three_item_set_combo_list = ar.getThreeItemCombo(track_id_list);
 		int[][] threeItemBasket = ar.getThreeItemBasket(oneItemBasket, track_id_list, three_item_set_combo_list,
 				twoItemBasket, two_item_set_combo_list, session_id_list);
 
-		ArrayList<ThreeItemSet> three_item_set_list = ar.getThreeItemSet(three_item_set_combo_list, two_item_set_list, threeItemBasket, session_id_list);
-		playedSongsService.insertThreeItemSet(three_item_set_list);
-		return "playSong";
+		ArrayList<ThreeItemSet> three_item_set_list = ar.getThreeItemSet(three_item_set_combo_list, two_item_set_list,
+				threeItemBasket, session_id_list);
+
+		if (playedSongsService.getThreeItemSet().isEmpty()) {
+			playedSongsService.insertThreeItemSet(three_item_set_list);
+		}
+
+		ArrayList<TwoItemSetRecomSong> two_item_recom_song_list = ar.getTwoItemRecomSong(two_item_set_list);
+		ArrayList<ThreeItemSetRecomSong> three_item_recom_song_list = ar.getThreeItemRecomSong(three_item_set_list);
+
+		System.out.println("TWO ITEM RECOM");
+		for (TwoItemSetRecomSong a : two_item_recom_song_list) {
+
+			System.out.println(a.getRecom_song() + " - " + a.getConfidence());
+		}
+		System.out.println("\nTHREE ITEM RECOM");
+		for (ThreeItemSetRecomSong b : three_item_recom_song_list) {
+
+			System.out.println(b.getRecom_song() + " - " + b.getConfidence());
+		}
+
+		return "index";
 
 	}
 

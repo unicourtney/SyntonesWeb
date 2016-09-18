@@ -39,7 +39,7 @@ public class Song {
 
 	@Transient
 	private String artistName;
-	
+
 	@Transient
 	private int distance;
 
@@ -52,20 +52,20 @@ public class Song {
 	@JoinColumn(referencedColumnName = "artist_id")
 	private Artist artist;
 
-	@Column(name = "lyrics",columnDefinition = "text")
+	@Column(name = "lyrics", columnDefinition = "text")
 	private String lyrics = "";
 
 	@Column(name = "file_path")
 	private String filePath;
-	
+
 	public Song() {
 
 	}
-	
-	public void setFile(File file){
+
+	public void setFile(File file) {
 		this.file = file;
 	}
-	
+
 	public void setLyrics(List<String> lyrics) {
 		// adding nextline tag
 		for (int i = 0; i < lyrics.size(); i++) {
@@ -130,17 +130,10 @@ public class Song {
 		this.lyrics = lyrics;
 	}
 
-	public File getFile(){
+	public File getFile() {
 		return file;
 	}
 
-	
-	
-	
-	
-	
-	
-	
 	public void setSongId(long songId) {
 		this.songId = songId;
 	}
@@ -149,8 +142,5 @@ public class Song {
 	public String toString() {
 		return "Song [songId=" + songId + ", songTitle=" + songTitle + ", artist= " + artist.getArtistName() + "]";
 	}
-
-	
-	
 
 }
