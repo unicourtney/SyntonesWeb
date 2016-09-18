@@ -40,4 +40,16 @@ public class PlayedSongsService {
 	public void insertThreeItemSet(ArrayList<ThreeItemSet> three_item_set_list) {
 		playedSongsDAO.insertThreeItemSet(three_item_set_list);
 	}
+
+	public List<TwoItemSet> getTwoItemSet() {
+		return playedSongsDAO.getTwoItemSet();
+	}
+
+	public List<ThreeItemSet> getThreeItemSet() {
+		return playedSongsDAO.getThreeItemSet();
+	}
+
+	public List<OneItemSetCount> getOneItemSetCount() {
+		return playedSongsDAO.getOneItemSetCount();
+	}
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.blackparty.syntones.model.OneItemSet;
 import com.blackparty.syntones.model.OneItemSetCount;
 import com.blackparty.syntones.model.PlayedSongs;
 import com.blackparty.syntones.model.ThreeItemSet;
@@ -97,6 +98,27 @@ public class PlayedSongsDAO {
 		}
 		session.close();
 
+	}
+
+	public List<TwoItemSet> getTwoItemSet() {
+
+		Session session = sf.openSession();
+		Query query = session.createQuery("from TwoItemSet");
+		return query.list();
+	}
+
+	public List<ThreeItemSet> getThreeItemSet() {
+
+		Session session = sf.openSession();
+		Query query = session.createQuery("from ThreeItemSet");
+		return query.list();
+	}
+	
+	public List<OneItemSetCount> getOneItemSetCount() {
+
+		Session session = sf.openSession();
+		Query query = session.createQuery("from OneItemSetCount");
+		return query.list();
 	}
 
 }
