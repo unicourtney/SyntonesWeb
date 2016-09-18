@@ -20,7 +20,7 @@ public class PlaylistService {
 		return playlistDao.getPlaylist(user);
 	}
 	
-	public List<Song> getSongsFromPlaylist(long id)throws Exception{
+	public Playlist getSongsFromPlaylist(long id)throws Exception{
 		return playlistDao.getSongsFromPlaylist(id);
 	}
 }

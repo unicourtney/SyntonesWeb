@@ -32,6 +32,7 @@ public class SongDAO {
 		for(String e:songIdList){
 			songList.add(getSong(e));
 		}
+		
 		return songList;
 	}
 
@@ -73,7 +74,8 @@ public class SongDAO {
 		Session session = sf.openSession();
 		Query q = session.createQuery("from Song");
 		List<Song> songList = q.list();
-		
+		session.flush();
+		session.close();
 		return songList;
 	}
 

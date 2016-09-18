@@ -32,6 +32,8 @@ public class ArtistDAO {
 		Query query = session.createQuery("from Artist where artistName = :name");
 		query.setString("name", artistName);
 		Artist result = (Artist) query.uniqueResult();
+		session.flush();
+		session.close();
 		return result;
 	}
 	
@@ -40,6 +42,8 @@ public class ArtistDAO {
 		Query query = session.createQuery("from Artist where artistId =:id");
 		query.setLong("id", artistId);
 		Artist result = (Artist) query.uniqueResult();
+		session.flush();
+		session.close();
 		return result;
 	}
 }

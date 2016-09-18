@@ -7,17 +7,17 @@ import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.User;
 
 
-public class LoginResponse {
+public class LibraryResponse {
 	
 	
 	
 	private Message message;
 	private List<Playlist> recentlyPlayedPlaylists;
 	
-	public LoginResponse(){}
+	public LibraryResponse(){}
 
 	
-	public LoginResponse(User user, Message message, List<Playlist> recentlyPlayedPlaylists){
+	public LibraryResponse(User user, Message message, List<Playlist> recentlyPlayedPlaylists){
 		this.message = message;
 		this.recentlyPlayedPlaylists = recentlyPlayedPlaylists;
 	}
