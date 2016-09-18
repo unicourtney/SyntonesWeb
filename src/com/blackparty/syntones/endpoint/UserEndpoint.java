@@ -19,7 +19,7 @@ import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.User;
 import com.blackparty.syntones.model.UserTransaction;
-import com.blackparty.syntones.response.LoginResponse;
+import com.blackparty.syntones.response.LibraryResponse;
 import com.blackparty.syntones.response.PlaylistResponse;
 import com.blackparty.syntones.response.ProfileResponse;
 import com.blackparty.syntones.service.PlaylistService;
@@ -55,9 +55,12 @@ public class UserEndpoint {
 		return profileResponse;
 	}
 
-	@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-	public LoginResponse login(@RequestBody User user, HttpSession session, HttpServletRequest request) {
-		LoginResponse loginResponse = new LoginResponse();
+	@RequestMapping(value = "/login", 
+			produces = MediaType.APPLICATION_JSON_VALUE, 
+			consumes = MediaType.APPLICATION_JSON_VALUE, 
+			method = RequestMethod.POST)
+	public LibraryResponse login(@RequestBody User user, HttpSession session, HttpServletRequest request) {
+		LibraryResponse loginResponse = new LibraryResponse();
 		System.out.println("Login request is received coming from " + user.getUsername());
 		Message message = new Message();
 		try {

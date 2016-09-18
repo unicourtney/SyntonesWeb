@@ -11,6 +11,7 @@ import com.blackparty.syntones.model.Message;
 import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.User;
+import com.blackparty.syntones.response.LibraryResponse;
 import com.blackparty.syntones.response.PlaylistResponse;
 import com.blackparty.syntones.response.PlaylistSongsResponse;
 import com.blackparty.syntones.response.SearchResponse;
@@ -63,8 +64,26 @@ public class NavigationEndpoint {
 		System.out.println("user dir:" + System.getProperty("user.dir"));
 		return "index";
 	}
-
 	
+	@RequestMapping(value = "/library",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public LibraryResponse library(@RequestBody User user){
+		LibraryResponse lResponse = new LibraryResponse();
+		Message message = new Message();
+		List<Playlist> playlists = null;
+		try{
+			playlists = playlistService.getPlaylist(user);
+		}catch(Exception e){
+			e.printStackTrace();
+			message.setMessage("Exception occured on the we service.");
+			message.setFlag(false);
+			lResponse.setMessage(message);
+			return lResponse;
+		}
+		message.setFlag(true);
+		lResponse.setRecentlyPlayedPlaylists(playlists);
+		lResponse.setMessage(message);
+		return lResponse;
+	}
 	@RequestMapping(value = "/songList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public SongListResponse getSongs() {
 		SongListResponse slr = new SongListResponse();
@@ -150,7 +169,7 @@ public class NavigationEndpoint {
 		long id = Long.parseLong(data.get("id"));
 		Message message = new Message();
 		try{
-			playlistSongsResponse.setSongsOnPlaylist( playlistService.getSongsFromPlaylist(id));
+			playlistSongsResponse.setPlaylist(playlistService.getSongsFromPlaylist(id));
 			message.setFlag(true);
 		}catch(Exception e){
 			e.printStackTrace();
