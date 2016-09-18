@@ -2,17 +2,22 @@ package com.blackparty.syntones.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "played_songs_tbl")
 public class PlayedSongs {
-
-	@Id
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO) 
+	@Column(name = "id")
+	private long id;
+
 	@Column(name = "session_id")
-	private String session_id;
+	private Long session_id;
 
 	@Column(name = "track_id")
 	private String track_id;
@@ -21,17 +26,17 @@ public class PlayedSongs {
 		super();
 	}
 
-	public PlayedSongs(String session_id, String track_id) {
+	public PlayedSongs(Long session_id, String track_id) {
 		super();
 		this.session_id = session_id;
 		this.track_id = track_id;
 	}
 
-	public String getSession_id() {
+	public Long getSession_id() {
 		return session_id;
 	}
 
-	public void setSession_id(String session_id) {
+	public void setSession_id(Long session_id) {
 		this.session_id = session_id;
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.tomcat.jni.Library;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -101,9 +102,9 @@ public class UserEndpoint {
 		System.out.println("received request to save a playlist from: " + playlist.getUser().getUsername());
 		String[] songIdList = playlist.getSongIdList();
 		System.out.println("songs to be saved: ");
-		for (String e : songIdList) {
-			System.out.println(e);
-		}
+//		for (String e : songIdList) {
+//			System.out.println(e);
+//		}
 		try {
 			playlistService.savePlaylist(playlist);
 		} catch (Exception e) {

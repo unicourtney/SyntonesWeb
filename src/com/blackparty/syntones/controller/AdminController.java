@@ -1,35 +1,51 @@
 package com.blackparty.syntones.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.blackparty.syntones.core.AssociationRule;
 import com.blackparty.syntones.core.FileCopy;
 import com.blackparty.syntones.core.ID3Extractor;
 import com.blackparty.syntones.core.LyricsExtractor;
 import com.blackparty.syntones.core.TrackSearcher;
 import com.blackparty.syntones.model.Artist;
+import com.blackparty.syntones.model.OneItemSetCount;
+import com.blackparty.syntones.model.PlayedSongs;
 import com.blackparty.syntones.model.Song;
+import com.blackparty.syntones.model.ThreeItemSet;
+import com.blackparty.syntones.model.ThreeItemSetCombo;
+import com.blackparty.syntones.model.TwoItemSet;
+import com.blackparty.syntones.model.TwoItemSetCombo;
 import com.blackparty.syntones.service.ArtistService;
+import com.blackparty.syntones.service.PlayedSongsService;
 import com.blackparty.syntones.service.SongService;
 
 @Controller
+
 @RequestMapping("/admin")
+
 public class AdminController {
 	@Autowired
 	ArtistService as;
 
 	@Autowired
 	SongService ss;
+
+	@Autowired
+	PlayedSongsService playedSongsService;
 
 	@RequestMapping(value = "/upload")
 	public ModelAndView readSongFile(@RequestParam(value = "file") MultipartFile multiPartFile,
@@ -44,10 +60,10 @@ public class AdminController {
 				// read the mp3 file first..
 				// converting multipartfile into file
 				System.out.println(multiPartFile.getOriginalFilename());
-				File file = new File("E:/deletables/"+multiPartFile.getOriginalFilename());
+				File file = new File("E:/deletables/" + multiPartFile.getOriginalFilename());
 				multiPartFile.transferTo(file);
 				System.out.println("file name: " + file.getName());
-				//FileCopy fc = new FileCopy();
+				// FileCopy fc = new FileCopy();
 				Song song = null;
 				// boolean flag = fc.copyFileUsingFileStreams(file);
 				ID3Extractor id3 = new ID3Extractor();
@@ -58,9 +74,9 @@ public class AdminController {
 					System.out.println("cant read any tags on the given file");
 				} else {
 					// validate the information via net
-					//Song songResult = new Song();
-					//TrackSearcher ts = new TrackSearcher();
-					//songResult = ts.search(song);
+					// Song songResult = new Song();
+					// TrackSearcher ts = new TrackSearcher();
+					// songResult = ts.search(song);
 
 					// extracting lyrics to the database
 					LyricsExtractor le = new LyricsExtractor();
@@ -72,7 +88,7 @@ public class AdminController {
 					mav.addObject("songTitle", song.getSongTitle());
 					request.getSession().setAttribute("song", song);
 					request.getSession().setAttribute("lyrics", lyrics);
-					request.getSession().setAttribute("file",file);
+					request.getSession().setAttribute("file", file);
 				}
 			} else {
 				System.out.println("Saving song to the server...");
@@ -84,7 +100,7 @@ public class AdminController {
 				Song song = (Song) request.getSession().getAttribute("song");
 				song.setArtist(artist);
 				song.setLyrics((List) request.getSession().getAttribute("lyrics"));
-				song.setFile((File)request.getSession().getAttribute("file"));
+				song.setFile((File) request.getSession().getAttribute("file"));
 				// save song to the database
 				ss.addSong(song);
 
@@ -96,19 +112,58 @@ public class AdminController {
 
 		return mav;
 	}
-	
-	@RequestMapping(value="/songList",method=RequestMethod.GET)
-	public ModelAndView showSongList(){
+
+	@RequestMapping(value = "/songList", method = RequestMethod.GET)
+	public ModelAndView showSongList() {
 		ModelAndView mav = new ModelAndView("songList");
-		//return lists of songs to the database;
-		try{
-			List<Song> songList= ss.getAllSongs();
+		// return lists of songs to the database;
+		try {
+			List<Song> songList = ss.getAllSongs();
 			mav.addObject("songList", songList);
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			mav.addObject("system_message", "there is an error when fetching to the database.");
 		}
 		return mav;
+	}
+
+	// Association Rule
+	@RequestMapping(value = "/arRecom")
+	public String viewAllSongs(HttpServletRequest request, HttpServletResponse response, ModelMap map)
+			throws Exception {
+		AssociationRule ar = new AssociationRule();
+
+		List<PlayedSongs> played_songs_list = playedSongsService.getPlayedSongs();
+		System.out.println("AR - ADMIN CONTROLLER");
+
+		ArrayList<String> track_id_list = ar.getUniqueOneItemTracks(played_songs_list);
+		ArrayList<Long> session_id_list = ar.getUniqueSessions(played_songs_list);
+
+		int[][] oneItemBasket = ar.getOneItemBasket(played_songs_list, session_id_list, track_id_list);
+
+		ArrayList<OneItemSetCount> one_item_set_count_list = ar.getOneItemCount(session_id_list, oneItemBasket,
+				played_songs_list, track_id_list);
+
+		// playedSongsService.insertOneItemSetCount(one_item_set_count_list);
+
+		ArrayList<TwoItemSetCombo> two_item_set_combo_list = ar.getTwoItemCombo(track_id_list);
+
+		int[][] twoItemBasket = ar.getTwoItemBasket(two_item_set_combo_list, oneItemBasket, track_id_list,
+				session_id_list);
+
+		System.out.println("TWO ITEM SET");
+		ArrayList<TwoItemSet> two_item_set_list = ar.getTwoItemSet(one_item_set_count_list, track_id_list,
+				twoItemBasket, two_item_set_combo_list, session_id_list);
+		// playedSongsService.insertTwoItemSet(two_item_set_list);
+
+		ArrayList<ThreeItemSetCombo> three_item_set_combo_list = ar.getThreeItemCombo(track_id_list);
+		int[][] threeItemBasket = ar.getThreeItemBasket(oneItemBasket, track_id_list, three_item_set_combo_list,
+				twoItemBasket, two_item_set_combo_list, session_id_list);
+
+		ArrayList<ThreeItemSet> three_item_set_list = ar.getThreeItemSet(three_item_set_combo_list, two_item_set_list, threeItemBasket, session_id_list);
+		playedSongsService.insertThreeItemSet(three_item_set_list);
+		return "playSong";
+
 	}
 
 }

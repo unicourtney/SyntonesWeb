@@ -2,19 +2,15 @@ package com.blackparty.syntones.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "three_item_set_combo_tbl")
 public class ThreeItemSetCombo {
 
-	@Id
-	
-	@Column(name = "track_id")
 	private String track_id;
 
-	@Column(name = "recom_song")
 	private String recom_song;
 
 	public ThreeItemSetCombo() {
