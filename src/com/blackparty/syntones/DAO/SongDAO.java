@@ -26,16 +26,6 @@ public class SongDAO {
 	@Autowired private ArtistService as;
 	
 
-	public ArrayList<Song> getAllSongs(String[] songIdList)throws Exception{
-		ArrayList<Song> songList = new ArrayList<Song>();
-		//search all songs using the songId
-		for(String e:songIdList){
-			songList.add(getSong(e));
-		}
-		
-		return songList;
-	}
-
 	
 	public void addSong(Song song)throws Exception{
 		Session session = sf.openSession();
@@ -59,10 +49,10 @@ public class SongDAO {
 	}
 
 
-	public Song getSong(String songId)throws Exception{
+	public Song getSong(long songId)throws Exception{
 		Session session = sf.openSession();
 		Query q = session.createQuery("from Song where song_id =:id");
-		q.setLong("id", Long.parseLong(songId));
+		q.setLong("id", songId);
 		Song song = (Song)q.uniqueResult();
 		System.out.println("song query: "+song.toString());
 		session.flush();
