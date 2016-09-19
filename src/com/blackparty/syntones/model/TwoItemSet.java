@@ -27,6 +27,10 @@ public class TwoItemSet {
 	@Column(name = "recom_song")
 	private String recom_song;
 
+	public TwoItemSet() {
+		super();
+	}
+
 	public TwoItemSet(String track_id, int count) {
 		super();
 		this.track_id = track_id;
