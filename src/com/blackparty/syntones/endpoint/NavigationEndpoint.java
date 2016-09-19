@@ -97,7 +97,6 @@ public class NavigationEndpoint {
 			}else{
 				message = new Message("Query returns zero results.",true);
 			}
-		
 			slr.setMessage(message);
 			slr.setSongList(songList);
 		}catch(Exception e){
@@ -118,7 +117,6 @@ public class NavigationEndpoint {
 		PlaylistResponse playlistResponse = new PlaylistResponse();
 		Message message = null;
 		try{
-			
 			List<Playlist> playlists = playlistService.getPlaylist(user);
 			if(playlists == null){
 				return null;
@@ -142,21 +140,7 @@ public class NavigationEndpoint {
 		return playlistResponse;
 	}
 	
-	@RequestMapping(value = "/listen", produces = "audio/mp3", method = RequestMethod.GET)
-	public Response listen(@HeaderParam("Range") String range) {
-		System.out.println("Received request to listen.");
-		String audio = "D:/Our_Files1/Eric/School/Thesis/Syntones/Songs/Uploaded/50450/500700.mp3";
-		File file = new File(audio);
-		MediaResource mediaResource = new MediaResource();
-		Response Rresponse = null;
-		try{
-			Rresponse = mediaResource.buildStream(file, range);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return Rresponse;
-	}
+	
 	@RequestMapping(value="/playlistSong",
 			method=RequestMethod.POST,
 			consumes=MediaType.APPLICATION_JSON_VALUE,

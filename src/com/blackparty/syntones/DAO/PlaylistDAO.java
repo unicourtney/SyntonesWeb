@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blackparty.syntones.model.Playlist;
+import com.blackparty.syntones.model.PlaylistSong;
 import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.User;
 import com.blackparty.syntones.service.SongService;
@@ -28,7 +29,22 @@ public class PlaylistDAO {
 
 	@Autowired
 	SongService songService;
-
+	@Autowired PlaylistSongDAO playlistSongService;
+	
+	
+	public void removePlaylist(Playlist playlist)throws Exception{
+		//deleting songs on the playlist first;
+		playlistSongService.removePlaylist(playlist);
+		
+		Session session = sessionFactory.openSession();
+		Query query = session.createQuery("delete from Playlist where playlistId=:id");
+		query.setLong("id", playlist.getPlaylistId());
+		query.executeUpdate();
+		session.flush();
+		session.close();
+		
+	}
+	
 	public void addPlaylist(Playlist playlist) throws Exception {
 		// complete details needed for playlist
 		// fetch details for user
@@ -40,7 +56,6 @@ public class PlaylistDAO {
 		session.close();
 	}
 
-	
 	public Playlist getSongsFromPlaylist(long id) throws Exception {
 		Session session = sessionFactory.openSession();
 		Query query = session.createSQLQuery("select song_id from playlist_song b where b.playlist_id =:id");
@@ -72,7 +87,8 @@ public class PlaylistDAO {
 		Query query = session.createQuery("from Playlist b where b.user.userId=:id");
 		query.setLong("id", fetchedUser.getUserId());
 		List<Playlist> playlists = query.list();	
-	
+		session.flush();
+		session.close();
 		return playlists;
 	}
 

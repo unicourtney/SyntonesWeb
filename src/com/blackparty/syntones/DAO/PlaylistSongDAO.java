@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.PlaylistSong;
 import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.service.SongService;
@@ -30,6 +31,15 @@ public class PlaylistSongDAO {
 		session.close();
 	}
 	
+	
+	public void removePlaylist(Playlist playlist){
+		Session session = sessionFactory.openSession();
+		Query query = session.createQuery("delete PlaylistSong where playlistId=:id");
+		query.setLong("id", playlist.getPlaylistId());
+		query.executeUpdate();
+		session.flush();
+		session.close();
+	}
 	public void addToplaylist(PlaylistSong playlistSong) throws Exception{
 		Session session = sessionFactory.openSession();
 		session.save(playlistSong);
