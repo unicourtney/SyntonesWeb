@@ -32,9 +32,6 @@
 		</c:forEach>
 	</table>
 
-	<button>
-		<a
-			href="${pageContext.request.contextPath}/admin/arRecom">Association Rule</a>
-	</button>
+
 </body>
 </html>
