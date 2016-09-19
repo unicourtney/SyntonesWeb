@@ -17,6 +17,7 @@ import com.blackparty.syntones.response.PlaylistSongsResponse;
 import com.blackparty.syntones.response.SearchResponse;
 import com.blackparty.syntones.response.SongListResponse;
 import com.blackparty.syntones.service.PlaylistService;
+import com.blackparty.syntones.service.PlaylistSongService;
 import com.blackparty.syntones.service.SongService;
 
 import java.io.BufferedInputStream;
@@ -43,11 +44,11 @@ import org.springframework.http.MediaType;
 @Component
 public class NavigationEndpoint {
 	@Autowired
-	SongService songService;
+	private SongService songService;
 	@Autowired
-	PlaylistService playlistService;
-	
-	
+	private PlaylistService playlistService;
+	@Autowired
+	private PlaylistSongService playlistSongService;
 	@RequestMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public SearchResponse search(@RequestBody String searchString) {
 		// wala pa ni siya gamit
@@ -84,7 +85,7 @@ public class NavigationEndpoint {
 		lResponse.setMessage(message);
 		return lResponse;
 	}
-	@RequestMapping(value = "/songList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/songlist", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public SongListResponse getSongs() {
 		SongListResponse slr = new SongListResponse();
 		System.out.println("Song list request is received");
@@ -96,10 +97,7 @@ public class NavigationEndpoint {
 			}else{
 				message = new Message("Query returns zero results.",true);
 			}
-			
-			for(Song s : songList){
-				System.out.println(s.toString());
-			}
+		
 			slr.setMessage(message);
 			slr.setSongList(songList);
 		}catch(Exception e){
@@ -131,9 +129,6 @@ public class NavigationEndpoint {
 				for(Playlist e:playlists){
 					Playlist pl = e;
 					System.out.println("Playlist Name: "+e.getPlaylistName());
-					for(Song l: pl.getSongs()){
-						System.out.println("\t"+l.getSongTitle());
-					}
 				}
 				message = new Message("",true);
 			}else{
@@ -173,7 +168,13 @@ public class NavigationEndpoint {
 		long id = Long.parseLong(data.get("id"));
 		Message message = new Message();
 		try{
-			playlistSongsResponse.setPlaylist(playlistService.getSongsFromPlaylist(id));
+			Playlist playlist = new Playlist();
+			playlist.setPlaylistId(id);
+			playlist.setSongs(playlistSongService.getSongs(id));
+			for(Song s:playlist.getSongs()){
+				System.out.println(s.toString());
+			}
+			playlistSongsResponse.setPlaylist(playlist);
 			message.setFlag(true);
 		}catch(Exception e){
 			e.printStackTrace();

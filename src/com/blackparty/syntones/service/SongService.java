@@ -22,10 +22,6 @@ public class SongService {
 	private SongDAO songDao;
 	
 	
-	public ArrayList<Song> getAllSongs(String[] songIdList)throws Exception{
-		return songDao.getAllSongs(songIdList);
-	}
-	
 	public void addSong(Song song) throws Exception{
 		songDao.addSong(song);
 	}
@@ -42,7 +38,7 @@ public class SongService {
 		return songList;
 	}
 	
-	public Song getSong(String songId)throws Exception{
+	public Song getSong(long songId)throws Exception{
 		return songDao.getSong(songId);
 	}
 
