@@ -2,20 +2,30 @@ package com.blackparty.syntones.endpoint;
 
 
 
+import java.io.File;
 import java.util.List;
+
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.blackparty.syntones.core.MediaResource;
 import com.blackparty.syntones.model.Message;
 import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.PlaylistSong;
+import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.response.LibraryResponse;
+import com.blackparty.syntones.response.ListenResponse;
 import com.blackparty.syntones.response.PlaylistResponse;
 import com.blackparty.syntones.response.PlaylistSongsResponse;
+import com.blackparty.syntones.response.RemovePlaylistResponse;
 import com.blackparty.syntones.response.RemoveToPlaylistResponse;
 import com.blackparty.syntones.service.PlaylistService;
 import com.blackparty.syntones.service.PlaylistSongService;
@@ -28,6 +38,53 @@ public class MusicEndpoint {
 	@Autowired private SongService songService; 
 	@Autowired private PlaylistService playlistService;
 	@Autowired private PlaylistSongService playlistSongService;
+	
+	@RequestMapping(value="/removePlaylist")
+	public RemovePlaylistResponse removePlaylist(@RequestBody Playlist playlist){
+		System.out.println("Received request to remove playlist from: "+playlist.getUser().getUsername());
+		RemovePlaylistResponse removePlaylistResponse = new RemovePlaylistResponse();
+		Message message = new Message();
+		try{
+			playlistService.removePlaylist(playlist);
+		}catch(Exception e){
+			e.printStackTrace();
+			message.setFlag(false);
+			message.setMessage("Exception occured on the webservice");
+		}
+		message.setFlag(true);
+		removePlaylistResponse.setMessage(message);
+		return removePlaylistResponse; 
+	}
+	@RequestMapping(value = "/listen", 
+			produces=MediaType.APPLICATION_JSON_VALUE,
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			method = RequestMethod.POST)
+	public ListenResponse listen(@RequestBody Song song) {
+		System.out.println("Received request to listen.");
+		String audio = "D:/Our_Files1/Eric/School/Thesis/Syntones/Songs/Uploaded/50450/500700.mp3";
+		File file = new File(audio);
+		MediaResource mediaResource = new MediaResource();
+		ListenResponse listenResponse = new ListenResponse();
+	
+		
+		//insert service that will fetch recommended songs to be added on listenresponse
+		
+		
+		return listenResponse;
+	}
+	
+	@RequestMapping(value="/listenPlaylist",
+			consumes=MediaType.APPLICATION_JSON_VALUE,
+			produces=MediaType.APPLICATION_JSON_VALUE,
+			method=RequestMethod.POST)
+	public ListenResponse listen(@RequestBody Playlist playlist){
+		ListenResponse lResponse = new ListenResponse();
+		
+		
+		//insert service that will fetch recommended songs to be added on listenresponse
+		
+		return lResponse;
+	}
 	
 
 	@RequestMapping(value="/savePlaylist",
@@ -87,7 +144,6 @@ public class MusicEndpoint {
 		libraryResponse.setMessage(message);
 		return libraryResponse;
 	}
-	
 	@RequestMapping(value="/playPlaylist")
 	public PlaylistSongsResponse playPlaylist(@RequestBody long id){
 		PlaylistSongsResponse ppResponse = new PlaylistSongsResponse();

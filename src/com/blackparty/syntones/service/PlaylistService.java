@@ -23,4 +23,8 @@ public class PlaylistService {
 	public Playlist getSongsFromPlaylist(long id)throws Exception{
 		return playlistDao.getSongsFromPlaylist(id);
 	}
+	
+	public void removePlaylist(Playlist playlist)throws Exception{
+		playlistDao.removePlaylist(playlist);
+	}
 }

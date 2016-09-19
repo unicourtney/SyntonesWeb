@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.blackparty.syntones.DAO.PlaylistSongDAO;
+import com.blackparty.syntones.model.Playlist;
 import com.blackparty.syntones.model.PlaylistSong;
 import com.blackparty.syntones.model.Song;
 
@@ -25,5 +26,7 @@ public class PlaylistSongService {
 	public void removeToPlaylist(PlaylistSong playlistSong)throws Exception{
 		playlistSongDao.removeToPlaylist(playlistSong);
 	}
-	
+	public void removePlaylist(Playlist playlist){
+		playlistSongDao.removePlaylist(playlist);
+	}
 }
