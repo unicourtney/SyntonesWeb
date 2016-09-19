@@ -28,23 +28,19 @@ public class Playlist {
 	@Column(name="playlist_name")
 	private String playlistName;
 	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name="playlist_song",joinColumns=@JoinColumn(name="playlist_id"),inverseJoinColumns=@JoinColumn(name="song_id"))
+	@Transient
 	private List<Song> songs;
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(referencedColumnName = "user_id")
 	private User user;
 
-	
 	@Transient
-	private String[] songIdList;
+	private long songId;
 
 	public Playlist(){
 		
 	}
-	
-	
 	
 	public Playlist(Long playlistId, String playlistName, List<Song> songs, User user, String[] songIdList) {
 		super();
@@ -52,7 +48,7 @@ public class Playlist {
 		this.playlistName = playlistName;
 		this.songs = songs;
 		this.user = user;
-		this.songIdList = songIdList;
+		
 	}
 
 
@@ -65,13 +61,23 @@ public class Playlist {
 		this.user = user;
 	}
 
-	public String[] getSongIdList() {
-		return songIdList;
+	public long getSongId() {
+		return songId;
 	}
 
-	public void setSongIdList(String[] songIdList) {
-		this.songIdList = songIdList;
+
+
+	public void setSongId(long songId) {
+		this.songId = songId;
 	}
+
+
+
+	public void setPlaylistId(long playlistId) {
+		this.playlistId = playlistId;
+	}
+
+
 
 	public Long getPlaylistId() {
 		return playlistId;
@@ -89,33 +95,22 @@ public class Playlist {
 		this.playlistName = playlistName;
 	}
 
-
-	
-
 	public void setPlaylistId(Long playlistId) {
 		this.playlistId = playlistId;
 	}
-
-
 
 	public List<Song> getSongs() {
 		return songs;
 	}
 
-
-
 	public void setSongs(List<Song> songs) {
 		this.songs = songs;
 	}
-
-
 
 	@Override
 	public String toString() {
 		return "Playlist [playlistId=" + playlistId + ", playlistName=" + playlistName + ", songs=" + songs + "]";
 	}
 
-	
-	
 
 }

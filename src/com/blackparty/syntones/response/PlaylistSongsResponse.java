@@ -1,10 +1,7 @@
 package com.blackparty.syntones.response;
 
-import java.util.List;
-
 import com.blackparty.syntones.model.Message;
 import com.blackparty.syntones.model.Playlist;
-import com.blackparty.syntones.model.Song;
 
 public class PlaylistSongsResponse {
 	private Playlist playlist;
