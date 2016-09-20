@@ -49,7 +49,7 @@ public class TrackSearcher {
 
             ArrayList<Song> songList = new ArrayList<Song>();
 
-            //System.out.println("TRACK MATCHES\n"+y);
+            System.out.println("TRACK MATCHES\n"+y);
             //parsing
             LinkedList<String> curlyBraceList = new LinkedList<String>();
             LinkedList<String> squareBracketList = new LinkedList<String>();
@@ -91,7 +91,7 @@ public class TrackSearcher {
                     resultName = json.get("artist").toString();
                     resultSong = json.get("name").toString();
                     Song s = new Song(resultSong,resultName);
-                    //System.out.println(s.toString());
+                    System.out.println(s.toString());
                     songList.add(s);
                     item = "";
                     counter++;

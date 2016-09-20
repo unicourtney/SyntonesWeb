@@ -48,7 +48,7 @@ public class AdminController {
 
 	@Autowired
 	PlayedSongsService playedSongsService;
-
+	
 	@RequestMapping(value = "/upload")
 	public ModelAndView readSongFile(@RequestParam(value = "file") MultipartFile multiPartFile,
 			@RequestParam(value = "action") String action, @RequestParam(value = "artistName") String artistName,
@@ -62,7 +62,7 @@ public class AdminController {
 				// read the mp3 file first..
 				// converting multipartfile into file
 				System.out.println(multiPartFile.getOriginalFilename());
-				File file = new File("E:/deletables/" + multiPartFile.getOriginalFilename());
+				File file = new File("D:/deletables/" + multiPartFile.getOriginalFilename());
 				multiPartFile.transferTo(file);
 				System.out.println("file name: " + file.getName());
 				// FileCopy fc = new FileCopy();
@@ -75,6 +75,7 @@ public class AdminController {
 							"Cant read any tags on the given file. Please provide title and artist instead.");
 					System.out.println("cant read any tags on the given file");
 				} else {
+
 					// validate the information via net
 					// Song songResult = new Song();
 					// TrackSearcher ts = new TrackSearcher();
@@ -82,7 +83,16 @@ public class AdminController {
 
 					// extracting lyrics to the database
 					LyricsExtractor le = new LyricsExtractor();
-					List<String> lyrics = le.getSongLyrics(song.getArtistName(), song.getSongTitle());
+					List<String> lyrics = null;
+					lyrics = le.getSongLyrics(song.getArtistName(), song.getSongTitle());
+					if (lyrics == null) {
+						// validate the information via net
+						System.out.println("cant get lyrics on the given artist and title.");
+						Song songResult = new Song();
+						TrackSearcher ts = new TrackSearcher();
+						songResult = ts.search(song);
+						lyrics = le.getSongLyrics(song.getArtistName(), song.getSongTitle());
+					}
 
 					System.out.println(lyrics);
 
@@ -95,7 +105,8 @@ public class AdminController {
 			} else {
 				System.out.println("Saving song to the server...");
 				// save the artist to the database
-				Artist artist = new Artist(artistName);
+				Artist artist = new Artist();
+				artist.setArtistName(artistName);
 				as.addArtist(artist);
 
 				// add the file, lyrics and artist to song object
@@ -105,7 +116,6 @@ public class AdminController {
 				song.setFile((File) request.getSession().getAttribute("file"));
 				// save song to the database
 				ss.addSong(song);
-
 			}
 
 		} catch (Exception e) {

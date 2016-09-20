@@ -16,6 +16,8 @@ public class ArtistService {
 		Artist fetchedArtist = getArtist(artist.getArtistName());
 		if(fetchedArtist == null){
 			artistDAO.addArtist(artist);
+		}else{
+			System.out.println(artist.getArtistName()+" already exists on the Database.");
 		}
 	}
 	

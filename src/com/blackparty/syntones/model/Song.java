@@ -137,10 +137,13 @@ public class Song {
 	public void setSongId(long songId) {
 		this.songId = songId;
 	}
-
+	public String displayTitleAndArtist(){
+		return "Song[Song Title: "+songTitle+", Artist: "+artistName+" ]";
+	}
+	
 	@Override
 	public String toString() {
-		return "Song [songId=" + songId + ", songTitle=" + songTitle + ", artist= " + artist.getArtistName() + "]";
+		return "Song [songId=" + songId + ", songTitle=" + songTitle + ", artist= " + artistName + "]";
 	}
 
 }
