@@ -30,7 +30,7 @@ public class MainController {
 	}
 	@RequestMapping(value = "/index")
 	public ModelAndView indexPage() {
-		ModelAndView mav = new ModelAndView("index", "message", "Running MainController.index().");
+		ModelAndView mav = new ModelAndView("index", "system_message", "Running MainController.index().");
 		return mav;
 	}
 	

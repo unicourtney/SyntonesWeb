@@ -3,6 +3,9 @@ package com.blackparty.syntones.endpoint;
 
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.HeaderParam;
@@ -69,7 +72,6 @@ public class MusicEndpoint {
 		
 		//insert service that will fetch recommended songs to be added on listenresponse
 		
-		
 		return listenResponse;
 	}
 	
@@ -78,10 +80,12 @@ public class MusicEndpoint {
 			produces=MediaType.APPLICATION_JSON_VALUE,
 			method=RequestMethod.POST)
 	public ListenResponse listen(@RequestBody Playlist playlist){
+		System.out.println("Received request to listen for playlist: "+playlist.getPlaylistId()+" from: "+playlist.getUser().getUsername());
 		ListenResponse lResponse = new ListenResponse();
-		
-		
 		//insert service that will fetch recommended songs to be added on listenresponse
+		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		Date dateObject = new Date();
+		System.out.println("Date and time: "+dateObject);
 		
 		return lResponse;
 	}

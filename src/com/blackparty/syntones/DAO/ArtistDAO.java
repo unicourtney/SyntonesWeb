@@ -28,10 +28,14 @@ public class ArtistDAO {
 	}
 	
 	public Artist getArtist(String artistName){
+		System.out.println("getting the artist using artist name: "+artistName);
 		Session session = sf.openSession();
 		Query query = session.createQuery("from Artist where artistName = :name");
 		query.setString("name", artistName);
 		Artist result = (Artist) query.uniqueResult();
+		if(result != null){
+			System.out.println("ARTIST ID!!! "+result.getArtistId());
+		}
 		session.flush();
 		session.close();
 		return result;
