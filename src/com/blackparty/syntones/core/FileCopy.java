@@ -9,7 +9,7 @@ import java.io.OutputStream;
 
 public class FileCopy {
 	
-	private String destination = "D:/data/temp/";
+	private String destination = "E:/temp/";
 	
 	public boolean copyFileUsingFileStreams(File source) {
 		InputStream input = null;

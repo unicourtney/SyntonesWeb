@@ -122,7 +122,7 @@ public class AddSongController {
 		ModelAndView mav = new ModelAndView();
 		try{
 			System.out.println(multiPartFile.getOriginalFilename());
-			File file = new File("D:/deletables/" + multiPartFile.getOriginalFilename());
+			File file = new File("E:/deletables/" + multiPartFile.getOriginalFilename());
 			multiPartFile.transferTo(file);
 			System.out.println("file name: " + file.getName());
 			// FileCopy fc = new FileCopy();

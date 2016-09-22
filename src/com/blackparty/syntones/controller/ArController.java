@@ -27,6 +27,9 @@ public class ArController {
 	@Autowired
 	PlayedSongsService playedSongsService;
 
+	@Autowired
+	SongService songService;
+
 	@RequestMapping(value = "/playIt")
 	public String viewAllSongs(HttpServletRequest request, HttpServletResponse response, ModelMap map)
 			throws Exception {
@@ -51,24 +54,40 @@ public class ArController {
 
 	}
 
+	@RequestMapping(value = "/viewSongLyrics", method = RequestMethod.GET)
+	public String viewSongLyrics(HttpServletRequest request, HttpServletResponse response, ModelMap map)
+			throws Exception {
+		System.out.println("-- SONG INFO --");
+
+		Long song_id = Long.parseLong(request.getParameter("id"));
+		Song song = songService.getSong(song_id);
+		map.addAttribute("songLyrics", song.getLyrics());
+
+		return "viewLyrics";
+
+	}
+
+	@RequestMapping(value = "/playTesting")
+	public String playTest(HttpServletRequest request, ModelMap map) {
+	
+		return "playTest";
+	}
+	
+
 	@RequestMapping(value = "/playThisSong", method = RequestMethod.POST)
 	public String storePlayedSong(HttpServletRequest request, ModelMap map) {
 		System.out.println("-- PLAY SONG --");
 
-		String song_id = request.getParameter("song_id");
-		Long session_id = Long.parseLong(request.getParameter("session_id"));
+		String song_id = request.getParameter("songId");
+		ArrayList<String> playedSong = new ArrayList<>();
 
-		boolean playedSongExists = playedSongsService.checkIfPlayedSongExists(session_id, song_id);
-		System.out.println("EXISTS:" + playedSongExists);
-		if (playedSongExists == false) {
-			PlayedSongs playedSongs = new PlayedSongs();
-			playedSongs.setSession_id(session_id);
-			playedSongs.setTrack_id(song_id);
-			System.out.println("EXISTS:" + playedSongExists);
-			playedSongsService.savePlayedSongs(playedSongs);
+		playedSong.add(song_id);
+
+		for (int a = 0; a < playedSong.size(); a++) {
+			System.out.println(playedSong.get(a) + a);
 		}
 
-		return "playSong";
+		return "playTest";
 	}
 
 }

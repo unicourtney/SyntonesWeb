@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.blackparty.syntones.model.OneItemSet;
 import com.blackparty.syntones.model.OneItemSetCount;
 import com.blackparty.syntones.model.PlayedSongs;
+import com.blackparty.syntones.model.TemporaryDB;
 import com.blackparty.syntones.model.ThreeItemSet;
 import com.blackparty.syntones.model.TwoItemSet;
 import com.blackparty.syntones.service.PlayedSongsService;
@@ -25,22 +26,30 @@ public class PlayedSongsDAO {
 	@Autowired
 	private PlayedSongsService playedSongsService;
 
-	public void savePlayedSongs(PlayedSongs playedSongs) {
+	// INSERTS
+	public void saveTemporaryDB(List<TemporaryDB> temporaryDB) {
 		Session session = sf.openSession();
 
-		playedSongs.getSession_id();
-		playedSongs.getTrack_id();
+		for (TemporaryDB a : temporaryDB) {
 
-		session.save(playedSongs);
-		session.flush();
+			a.getSong_id();
+			a.getUser_id();
+			session.save(a);
+			session.flush();
+		}
+
 		session.close();
 	}
 
-	public List<PlayedSongs> getPlayedSongs() {
+	public void savePlayedSongs(PlayedSongs playedSongs) {
 		Session session = sf.openSession();
-		Query query = session.createQuery("from PlayedSongs");
-		return query.list();
 
+		playedSongs.getTrack_id();
+		playedSongs.getUser_id();
+		session.save(playedSongs);
+		session.flush();
+
+		session.close();
 	}
 
 	public void insertOneItemSetCount(ArrayList<OneItemSetCount> one_item_set_count_list) {
@@ -100,6 +109,21 @@ public class PlayedSongsDAO {
 
 	}
 
+	// FETCHES
+
+	public List<TemporaryDB> getTemporaryDB() {
+		Session session = sf.openSession();
+		Query query = session.createQuery("from TemporaryDB");
+		return query.list();
+	}
+
+	public List<PlayedSongs> getPlayedSongs() {
+		Session session = sf.openSession();
+		Query query = session.createQuery("from PlayedSongs");
+		return query.list();
+
+	}
+
 	public List<TwoItemSet> getTwoItemSet() {
 
 		Session session = sf.openSession();
@@ -129,7 +153,7 @@ public class PlayedSongsDAO {
 		query.setString("song_id", song_id);
 
 		PlayedSongs playedSongs = (PlayedSongs) query.uniqueResult();
-		if (playedSongs!=null) {
+		if (playedSongs != null) {
 			songExists = true;
 		} else {
 			songExists = false;
@@ -138,6 +162,40 @@ public class PlayedSongsDAO {
 		session.flush();
 		session.close();
 		return songExists;
+	}
+
+	// DELETES
+
+	public void truncateTemporaryDB() {
+
+		Session session = sf.openSession();
+		Query query = session.createQuery("delete from TemporaryDB");
+		query.executeUpdate();
+		session.close();
+	}
+
+	public void truncateOneSetItemCount() {
+
+		Session session = sf.openSession();
+		Query query = session.createQuery("delete from OneItemSetCount");
+		query.executeUpdate();
+		session.close();
+	}
+
+	public void truncateTwoItemSet() {
+
+		Session session = sf.openSession();
+		Query query = session.createQuery("delete from TwoItemSet");
+		query.executeUpdate();
+		session.close();
+	}
+
+	public void truncateThreeItemSet() {
+
+		Session session = sf.openSession();
+		Query query = session.createQuery("delete from ThreeItemSet");
+		query.executeUpdate();
+		session.close();
 	}
 
 }
