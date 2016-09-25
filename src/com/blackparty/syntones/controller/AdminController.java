@@ -115,7 +115,7 @@ public class AdminController {
 				song.setLyrics((List) request.getSession().getAttribute("lyrics"));
 				song.setFile((File) request.getSession().getAttribute("file"));
 				// save song to the database
-				ss.addSong(song);
+//				ss.addSong(song);
 			}
 
 		} catch (Exception e) {

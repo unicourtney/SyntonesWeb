@@ -106,7 +106,7 @@ public class AddSongController {
 		System.out.print("Saving song to the server...");
 		// save song to the database
 		try{
-			ss.addSong(song);
+//			ss.addSong(song);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
