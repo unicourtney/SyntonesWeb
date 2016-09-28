@@ -270,7 +270,7 @@ public class MusicEndpoint {
 		Message message = new Message();
 
 		if (temporaryDB != null) {
-			message.setMessage("I GOT THE SONG ID AND THE USER ID!");
+			message.setMessage("ABLE TO ACCESS LISTEN");
 			for (TemporaryDB a : temporaryDB) {
 
 				System.out.println("Listen: \nSong ID: " + a.getSong_id() + "User ID: " + a.getUser_id());
