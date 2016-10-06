@@ -57,13 +57,15 @@ public class UserEndpoint {
 			produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE, 
 			method = RequestMethod.POST)
-	public LibraryResponse login(@RequestBody User user, HttpSession session, HttpServletRequest request) {
+	public LibraryResponse login(@RequestBody User user, HttpSession session, HttpServletRequest request) throws Exception {
 		LibraryResponse loginResponse = new LibraryResponse();
 		System.out.println("Login request is received coming from " + user.getUsername());
 		Message message = new Message();
+		User fetchedUser = null;
 		try {
 			message = userService.authenticateUser(user);
 			if(message.getFlag()){
+				fetchedUser = userService.getUser(user);
 				//get recently played playlists..
 				List<Playlist> playlists = playlistService.getPlaylist(user);
 				if(playlists != null){
@@ -72,6 +74,7 @@ public class UserEndpoint {
 					loginResponse.setRecentlyPlayedPlaylists(null);
 				}
 			}
+			loginResponse.setUser(fetchedUser);
 			loginResponse.setMessage(message);
 		} catch (Exception e) {
 			e.printStackTrace();

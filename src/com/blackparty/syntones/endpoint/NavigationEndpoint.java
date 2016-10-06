@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blackparty.syntones.core.MediaResource;
+import com.blackparty.syntones.core.SearchProcess;
 import com.blackparty.syntones.model.Artist;
 import com.blackparty.syntones.model.Message;
 import com.blackparty.syntones.model.Playlist;
+import com.blackparty.syntones.model.SearchResultModel;
 import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.User;
 import com.blackparty.syntones.response.ArtistResponse;
@@ -19,9 +21,11 @@ import com.blackparty.syntones.response.PlaylistSongsResponse;
 import com.blackparty.syntones.response.SearchResponse;
 import com.blackparty.syntones.response.SongListResponse;
 import com.blackparty.syntones.service.ArtistService;
+import com.blackparty.syntones.service.ArtistWordBankService;
 import com.blackparty.syntones.service.PlaylistService;
 import com.blackparty.syntones.service.PlaylistSongService;
 import com.blackparty.syntones.service.SongService;
+import com.blackparty.syntones.service.SongWordBankService;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -54,6 +58,10 @@ public class NavigationEndpoint {
 	private PlaylistSongService playlistSongService;
 	@Autowired
 	private ArtistService artistService;
+	@Autowired
+	private ArtistWordBankService abservice;
+	@Autowired
+	private SongWordBankService sbservice;
 	
 	@RequestMapping(value="/getAllArtists",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ArtistResponse getAllArtist(){
@@ -75,12 +83,23 @@ public class NavigationEndpoint {
 	}
 	
 	@RequestMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public SearchResponse search(@RequestBody String searchString) {
+	public SearchResponse search(@RequestBody String searchString) throws Exception {
 		// wala pa ni siya gamit
 		System.out.println("recived search request");
 		SearchResponse sr = new SearchResponse();
 		Message message = new Message();
 		message.setMessage("search request \"" + searchString + "\"has been received.");
+		sr.setMessage(message);
+		System.out.println("======================= " + searchString + " =======================" + " -ENDPOINT");
+		SearchProcess sp = new SearchProcess();
+		SearchResultModel searchResult = sp.SearchProcess(searchString.replace("\"", "").trim(),
+				abservice.fetchAllWordBank(), sbservice.fetchAllWordBank(),
+				songService.getAllSongs(), artistService.getAllArtists());
+
+		List<Song> songs = songService.getSongs(searchResult.getSongs());
+		List<Artist> artists = artistService.getArtists(searchResult.getArtists());
+		sr.setSongs(songs);
+		sr.setArtists(artists);
 		sr.setMessage(message);
 		return sr;
 	}
