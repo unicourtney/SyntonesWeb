@@ -35,7 +35,7 @@ public class FTPUploader {
 		boolean done = ftp.storeFile(hostDir + fileName, input);
         input.close();
         if (done) {
-            System.out.println("The file is uploaded successfully.");
+            System.out.println("========== The file is uploaded successfully.");
         }
 		return fileName;
 	}

@@ -1,6 +1,7 @@
 package com.blackparty.syntones.core;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -22,9 +23,9 @@ import com.blackparty.syntones.model.PlayedSongs;
 import com.blackparty.syntones.service.PlayedSongsService;
 
 public class AssociationRule {
-	@Autowired
-	private PlayedSongsService playedSongsService;
-	private static final int THRESHOLD = 50;
+
+	private static final int THRESHOLD = 1, SUPPORT = 8;
+	private static DecimalFormat decimalFormat = new DecimalFormat("#");
 
 	public static ArrayList<String> getUniqueOneItemTracks(List<PlayedSongs> played_songs_list) {
 
@@ -49,8 +50,7 @@ public class AssociationRule {
 		ArrayList<String> session_id_list = new ArrayList<>();
 
 		for (int a = 0; a < played_songs_list.size(); a++) {
-			session_id_list.add(played_songs_list.get(a).getUser_id());
-
+			session_id_list.add(played_songs_list.get(a).getSession_id());
 
 		}
 
@@ -76,7 +76,7 @@ public class AssociationRule {
 
 				for (int a = 0; a < played_songs_list.size(); a++) {
 					track = played_songs_list.get(a).getTrack_id();
-					session = played_songs_list.get(a).getUser_id();
+					session = played_songs_list.get(a).getSession_id();
 
 					if (session.equals(session_id_list.get(col))) {
 						if (track.equals(track_id_list.get(row))) {
@@ -84,10 +84,10 @@ public class AssociationRule {
 						}
 					}
 				}
-//				System.out.print("\t" + basket[row][col]);
+				// System.out.print("\t" + basket[row][col]);
 
 			}
-//			System.out.println();
+			// System.out.println();
 		}
 		return basket;
 
@@ -96,31 +96,76 @@ public class AssociationRule {
 	public ArrayList<OneItemSetCount> getOneItemCount(ArrayList<String> session_id_list, int[][] oneItemBasket,
 			List<PlayedSongs> played_songs_list, ArrayList<String> track_id_list) throws SQLException {
 		int row = track_id_list.size(), col = session_id_list.size(), sum = 0;
+		double support = 0;
 		ArrayList<OneItemSetCount> one_item_set_count_list = new ArrayList<>();
+
 		for (row = 0; row < track_id_list.size(); row++) {
 			for (col = 0; col < session_id_list.size(); col++) {
 
 				sum += oneItemBasket[row][col];
+				support = 100 * (Double.parseDouble(String.valueOf(sum))
+						/ Double.parseDouble(String.valueOf(track_id_list.size())));
 
 			}
 
-			OneItemSetCount one_item_set_count = new OneItemSetCount(track_id_list.get(row), sum);
+			OneItemSetCount one_item_set_count = new OneItemSetCount(track_id_list.get(row), sum,
+					Double.parseDouble(decimalFormat.format(support)));
 			one_item_set_count_list.add(one_item_set_count);
 			sum = 0;
 		}
-		
+
 		return one_item_set_count_list;
 
 	}
 
-	public static ArrayList<TwoItemSetCombo> getTwoItemCombo(ArrayList<String> track_id_list) throws SQLException {
+	public static ArrayList<String> getPassedOneItemSupport(ArrayList<OneItemSetCount> one_item_set_count_list) {
+		ArrayList<String> passed_one_item_support_list = new ArrayList<>();
+
+		for (OneItemSetCount a : one_item_set_count_list) {
+
+			if (a.getSupport() >= SUPPORT) {
+				passed_one_item_support_list.add(a.getTrack_id());
+
+			}
+		}
+		return passed_one_item_support_list;
+	}
+
+	public static ArrayList<String> getPassedTwoItemSupport(ArrayList<TwoItemSet> two_item_set_list) {
+		ArrayList<String> passed_two_item_support_list = new ArrayList<>();
+		String[] tracks = null;
+		for (TwoItemSet a : two_item_set_list) {
+
+			if (a.getSupport() >= SUPPORT) {
+				tracks = a.getTrack_id().split(",");
+				passed_two_item_support_list.add(tracks[0]);
+				passed_two_item_support_list.add(tracks[1]);
+
+			}
+		}
+
+		Set<String> hs = new HashSet<>();
+		hs.addAll(passed_two_item_support_list);
+		passed_two_item_support_list.clear();
+		passed_two_item_support_list.addAll(hs);
+
+		Collections.sort(passed_two_item_support_list);
+
+		/*
+		 * for(String a: passed_two_item_support_list){ System.out.println(a); }
+		 */
+		return passed_two_item_support_list;
+	}
+
+	public static ArrayList<TwoItemSetCombo> getTwoItemCombo(ArrayList<String> passed_one_item_support_list)
+			throws SQLException {
 
 		int r = 2;
-		int n = track_id_list.size();
+		int n = passed_one_item_support_list.size();
 		String[] temp_storage = new String[r], track;
 		ArrayList<TwoItemSetCombo> two_item_set_combo_list = new ArrayList<TwoItemSetCombo>();
-		ArrayList<String> played_two_item_combo_list = getCombination(track_id_list, temp_storage, new ArrayList<>(), 0,
-				n - 1, 0, r);
+		ArrayList<String> played_two_item_combo_list = getCombination(passed_one_item_support_list, temp_storage,
+				new ArrayList<>(), 0, n - 1, 0, r);
 
 		for (int a = 0; a < played_two_item_combo_list.size(); a++) {
 
@@ -134,22 +179,36 @@ public class AssociationRule {
 		return two_item_set_combo_list;
 	}
 
-	public static ArrayList<ThreeItemSetCombo> getThreeItemCombo(ArrayList<String> track_id_list) throws SQLException {
+	public static ArrayList<ThreeItemSetCombo> getThreeItemCombo(ArrayList<String> passed_two_item_support_list,
+			ArrayList<TwoItemSet> two_item_set_list) throws SQLException {
 
 		int r = 3;
-		int n = track_id_list.size();
+		int n = passed_two_item_support_list.size();
 		String[] temp_storage = new String[r], track;
 		ArrayList<ThreeItemSetCombo> three_item_combo_list = new ArrayList<>();
-		ArrayList<String> played_three_item_combo_list = getCombination(track_id_list, temp_storage, new ArrayList<>(),
-				0, n - 1, 0, r);
+		ArrayList<String> played_three_item_combo_list = getCombination(passed_two_item_support_list, temp_storage,
+				new ArrayList<>(), 0, n - 1, 0, r);
 
 		for (int a = 0; a < played_three_item_combo_list.size(); a++) {
+
 			track = played_three_item_combo_list.get(a).split(",");
+			/*
+			 * System.out.println("========================" +
+			 * played_three_item_combo_list.get(a));
+			 */
+			for (int b = 0; b < two_item_set_list.size(); b++) {
 
-			ThreeItemSetCombo three_item_set_combo = new ThreeItemSetCombo(track[0] + "," + track[1] + "," + track[2],
-					track[2]);
+				if (two_item_set_list.get(b).getTrack_id().equals(track[0] + "," + track[1])) {
 
-			three_item_combo_list.add(three_item_set_combo);
+					if (two_item_set_list.get(b).getSupport() >= SUPPORT) {
+						System.out.println("=========================== " + two_item_set_list.get(b).getTrack_id());
+						ThreeItemSetCombo three_item_set_combo = new ThreeItemSetCombo(
+								track[0] + "," + track[1] + "," + track[2], track[2]);
+
+						three_item_combo_list.add(three_item_set_combo);
+					}
+				}
+			}
 
 		}
 
@@ -196,21 +255,12 @@ public class AssociationRule {
 								if (two_item_tracks[1].equals(track_id_list.get(row_1))) {
 									if (oneItemBasket[row_1][col] == 1) {
 
-										// System.out.println(
-										// two_item_tracks[0] +
-										// two_item_tracks[1] + " | " +
-										// track_id_list.get(row)
-										// + track_id_list.get(row_1) + " - " +
-										// session_id_list.get(col));
-
 										PlayedTwoItemSet played_two_item_set_list = new PlayedTwoItemSet();
 										played_two_item_set_list
 												.setCombination(two_item_tracks[0] + "," + two_item_tracks[1]);
 										played_two_item_set_list.setUser_id(session_id_list.get(col));
 										two_item_combo_tracks_list.add(played_two_item_set_list);
 
-										// twoItemBasket[row_tItem][col_tItem] =
-										// String.valueOf(col);
 									}
 
 								}
@@ -244,10 +294,10 @@ public class AssociationRule {
 					}
 				}
 
-//				 System.out.print("\t" + twoItemBasket[row_tItem][col_tItem]);
+				// System.out.print("\t" + twoItemBasket[row_tItem][col_tItem]);
 			}
 
-//			 System.out.println();
+			// System.out.println();
 		}
 		return twoItemBasket;
 	}
@@ -258,15 +308,19 @@ public class AssociationRule {
 			throws SQLException {
 
 		int row_tItem = played_two_item_combo_list.size(), col_tItem = session_id_list.size(), sum = 0;
+		double support = 0;
 		ArrayList<TwoItemSet> two_item_set_count_list = new ArrayList<>();
 		TwoItemSet two_item_set_count;
 		for (row_tItem = 0; row_tItem < played_two_item_combo_list.size(); row_tItem++) {
 			for (col_tItem = 0; col_tItem < session_id_list.size(); col_tItem++) {
 
 				sum += twoItemBasket[row_tItem][col_tItem];
+				support = 100 * (Double.parseDouble(String.valueOf(sum))
+						/ Double.parseDouble(String.valueOf(one_item_set_count_list.size())));
 
 			}
-			two_item_set_count = new TwoItemSet(played_two_item_combo_list.get(row_tItem).getCombination(), sum);
+			two_item_set_count = new TwoItemSet(played_two_item_combo_list.get(row_tItem).getCombination(), sum,
+					Double.parseDouble(decimalFormat.format(support)));
 			two_item_set_count_list.add(two_item_set_count);
 			// JDBCConnection db = new JDBCConnection();
 			// db.main(args);
@@ -275,7 +329,7 @@ public class AssociationRule {
 		}
 
 		String[] track;
-		float confidence;
+		double confidence;
 		ArrayList<TwoItemSet> two_item_set_confidence_list = new ArrayList<>();
 		ArrayList<TwoItemSet> two_item_set_list = new ArrayList<>();
 		for (int a = 0; a < two_item_set_count_list.size(); a++) {
@@ -285,15 +339,19 @@ public class AssociationRule {
 				if (track[0].equals(one_item_set_count_list.get(b).getTrack_id())) {
 
 					if (two_item_set_count_list.get(a).getCount() != 0) {
-						confidence = 100 / (one_item_set_count_list.get(b).getCount()
-								/ two_item_set_count_list.get(a).getCount());
+						confidence = 100 * (Double
+								.parseDouble(String.valueOf(two_item_set_count_list.get(a).getCount()))
+								/ Double.parseDouble(String.valueOf(one_item_set_count_list.get(b).getCount())));
+
 					} else {
 
 						confidence = 0;
 					}
 
-					TwoItemSet two_item_set = new TwoItemSet(two_item_set_count_list.get(a).getTrack_id(), track[1],
-							two_item_set_count_list.get(a).getCount(), confidence);
+					TwoItemSet two_item_set = new TwoItemSet(two_item_set_count_list.get(a).getTrack_id(),
+							Long.parseLong(track[1]), two_item_set_count_list.get(a).getCount(),
+							two_item_set_count_list.get(a).getSupport(),
+							Double.parseDouble(decimalFormat.format(confidence)));
 					two_item_set_confidence_list.add(two_item_set);
 
 					two_item_set_list.add(two_item_set);
@@ -375,19 +433,21 @@ public class AssociationRule {
 					}
 				}
 
-//				 System.out.print("\t" + threeItemBasket[row_tItem][col_tItem]);
+				// System.out.print("\t" +
+				// threeItemBasket[row_tItem][col_tItem]);
 			}
 
-//			 System.out.println();
+			// System.out.println();
 		}
 		return threeItemBasket;
 	}
 
 	public static ArrayList<ThreeItemSet> getThreeItemSet(ArrayList<ThreeItemSetCombo> three_item_set_combo_list,
-			ArrayList<TwoItemSet> two_item_set_list, int[][] threeItemBasket, ArrayList<String> session_id_list)
-			throws SQLException {
+			ArrayList<TwoItemSet> two_item_set_list, int[][] threeItemBasket, ArrayList<String> session_id_list,
+			ArrayList<OneItemSetCount> one_item_set_count_list) throws SQLException {
 
 		int row_tItem = three_item_set_combo_list.size(), col_tItem = session_id_list.size(), sum = 0;
+		double support = 0;
 		ArrayList<ThreeItemSet> three_item_set_count_list = new ArrayList<>();
 		ThreeItemSet three_item_set_count;
 
@@ -395,9 +455,12 @@ public class AssociationRule {
 			for (col_tItem = 0; col_tItem < session_id_list.size(); col_tItem++) {
 
 				sum += threeItemBasket[row_tItem][col_tItem];
+				support = 100 * (Double.parseDouble(String.valueOf(sum))
+						/ Double.parseDouble(String.valueOf(one_item_set_count_list.size())));
 
 			}
-			three_item_set_count = new ThreeItemSet(three_item_set_combo_list.get(row_tItem).getTrack_id(), sum);
+			three_item_set_count = new ThreeItemSet(three_item_set_combo_list.get(row_tItem).getTrack_id(), sum,
+					Double.parseDouble(decimalFormat.format(support)));
 			three_item_set_count_list.add(three_item_set_count);
 
 			sum = 0;
@@ -405,7 +468,7 @@ public class AssociationRule {
 
 		String[] three_item_track;
 		String three_item_combo;
-		float confidence;
+		double confidence;
 		ArrayList<ThreeItemSet> three_item_set_confidence_list = new ArrayList<>();
 		ArrayList<ThreeItemSet> three_item_set_list = new ArrayList<>();
 		for (int a = 0; a < three_item_set_count_list.size(); a++) {
@@ -415,10 +478,11 @@ public class AssociationRule {
 				three_item_combo = three_item_track[0] + "," + three_item_track[1];
 
 				if (three_item_combo.equals(two_item_set_list.get(b).getTrack_id())) {
-			
+
 					if (three_item_set_count_list.get(a).getCount() != 0) {
 						confidence = 100
-								/ (two_item_set_list.get(b).getCount() / three_item_set_count_list.get(a).getCount());
+								* (Double.parseDouble(String.valueOf(three_item_set_count_list.get(a).getCount()))
+										/ Double.parseDouble(String.valueOf(two_item_set_list.get(b).getCount())));
 
 					} else {
 
@@ -426,7 +490,9 @@ public class AssociationRule {
 					}
 
 					ThreeItemSet three_item_set = new ThreeItemSet(three_item_set_count_list.get(a).getTrack_id(),
-							three_item_track[2], three_item_set_count_list.get(a).getCount(), confidence);
+							Long.parseLong(three_item_track[2]), three_item_set_count_list.get(a).getCount(),
+							three_item_set_count_list.get(a).getSupport(),
+							Double.parseDouble(decimalFormat.format(confidence)));
 					three_item_set_confidence_list.add(three_item_set);
 
 					three_item_set_list.add(three_item_set);
@@ -439,41 +505,8 @@ public class AssociationRule {
 
 	}
 
-	public static ArrayList<TwoItemSetRecomSong> getTwoItemRecomSong(ArrayList<TwoItemSet> two_item_set_list) {
-
-		ArrayList<TwoItemSetRecomSong> two_item_recom_song_list = new ArrayList<>();
-
-		for (TwoItemSet a : two_item_set_list) {
-
-			if (a.getConfidence() >= THRESHOLD) {
-				TwoItemSetRecomSong two_item_recom_song = new TwoItemSetRecomSong();
-
-				two_item_recom_song.setRecom_song(a.getRecom_song());
-				two_item_recom_song.setConfidence(a.getConfidence());
-				two_item_recom_song_list.add(two_item_recom_song);
-
-			}
-		}
-
-		return two_item_recom_song_list;
-	}
-
-	public static ArrayList<ThreeItemSetRecomSong> getThreeItemRecomSong(ArrayList<ThreeItemSet> three_item_set_list) {
-
-		ArrayList<ThreeItemSetRecomSong> three_item_recom_song_list = new ArrayList<>();
-
-		for (ThreeItemSet a : three_item_set_list) {
-
-			if (a.getConfidence() >= THRESHOLD) {
-				ThreeItemSetRecomSong three_item_set_recom_song = new ThreeItemSetRecomSong();
-				three_item_set_recom_song.setRecom_song(a.getRecom_song());
-				three_item_set_recom_song.setConfidence(a.getConfidence());
-				three_item_recom_song_list.add(three_item_set_recom_song);
-
-			}
-		}
-
-		return three_item_recom_song_list;
+	public static int getThreshold() {
+		return THRESHOLD;
 	}
 
 }

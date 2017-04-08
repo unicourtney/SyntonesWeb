@@ -23,7 +23,7 @@ public class Mp3Uploader {
 		FTPUploader ftpUploader = new FTPUploader("127.0.0.1", "Court", "syntones");
 		String fileName = ftpUploader.uploadFile(file.toPath().toString(),artistId + "-" + songId + ".mp3", "/songUploaded/");
 		ftpUploader.disconnect();
-		System.out.println("Done");
+		System.out.println("========= Done");
 		return fileName;
 
 	}

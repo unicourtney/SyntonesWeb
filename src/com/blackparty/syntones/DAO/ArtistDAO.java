@@ -32,6 +32,7 @@ public class ArtistDAO {
 		Query query = session.createQuery("from Artist");
 		List<Artist> artists = query.list();
 		session.flush();
+		session.clear();
 		session.close();
 		return artists;
 	}
@@ -53,6 +54,7 @@ public class ArtistDAO {
 			System.out.println("ARTIST ID!!! "+result.getArtistId());
 		}
 		session.flush();
+		session.clear();
 		session.close();
 		return result;
 	}
@@ -63,6 +65,7 @@ public class ArtistDAO {
 		query.setLong("id", artistId);
 		Artist result = (Artist) query.uniqueResult();
 		session.flush();
+		session.clear();
 		session.close();
 		return result;
 	}
@@ -76,17 +79,29 @@ public class ArtistDAO {
 		trans.commit();
 		session.close();
 	}
-	
 	public ArrayList<Artist> getArtists(ArrayList<SearchModel> model) {
 		Session session = sf.openSession();
 		ArrayList<Artist> artists = new ArrayList();
 		for (SearchModel sm : model) {
 			Query query = session
 					.createQuery("from Artist where artistId =:id");
-			query.setLong("id", sm.getId());
+			query.setLong("id", sm.getArtistId());
 			Artist artist = (Artist) query.uniqueResult();
 			artists.add(artist);
 		}
+		session.flush();
+		session.clear();
+		session.close();
+		session.close();
 		return artists;
 	}
+	public int artistCount(){
+		Session session = sf.openSession();
+		int count = ((Long) session.createQuery("select count(*) from Artist").uniqueResult()).intValue();
+		session.flush();
+		session.clear();
+		session.close();
+		return count;
+	}
+	
 }

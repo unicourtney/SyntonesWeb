@@ -10,6 +10,8 @@ import com.blackparty.syntones.DAO.PlayedSongsDAO;
 import com.blackparty.syntones.DAO.UserDAO;
 import com.blackparty.syntones.model.OneItemSetCount;
 import com.blackparty.syntones.model.PlayedSongs;
+import com.blackparty.syntones.model.PlayedSongsByTime;
+import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.TemporaryDB;
 import com.blackparty.syntones.model.ThreeItemSet;
 import com.blackparty.syntones.model.TwoItemSet;
@@ -20,7 +22,21 @@ public class PlayedSongsService {
 	private PlayedSongsDAO playedSongsDAO;
 
 	// INSERTS
-	public void saveTemporaryDB(List<TemporaryDB> temporaryDB) {
+
+	
+	public List<PlayedSongs> getUserPlayedSongs(long userId,String partOfDay) throws Exception{
+		return playedSongsDAO.getUserPlayedSongs(userId,partOfDay);
+	}
+	
+	public  int getNumberOfSessions(long userId)throws Exception {
+		return playedSongsDAO.getNumberOfSessions(userId);
+	}
+	
+	public void savePlayedSongsByTime(ArrayList<PlayedSongsByTime> playedSongsByTime) {
+		playedSongsDAO.savePlayedSongByTime(playedSongsByTime);
+	}
+
+	public void saveTemporaryDB(TemporaryDB temporaryDB) {
 		playedSongsDAO.saveTemporaryDB(temporaryDB);
 	}
 
@@ -41,8 +57,16 @@ public class PlayedSongsService {
 	public void insertThreeItemSet(ArrayList<ThreeItemSet> three_item_set_list) {
 		playedSongsDAO.insertThreeItemSet(three_item_set_list);
 	}
-	
-	//FETCHES
+
+	// FETCHES
+
+	public List<PlayedSongsByTime> getPlayedSongsByTime() {
+		return playedSongsDAO.getPlayedSongsByTime();
+	}
+
+	public List<PlayedSongs> getPlayedSongsAsc() {
+		return playedSongsDAO.getPlayedSongsAsc();
+	}
 
 	public List<TemporaryDB> getTemporaryDB() {
 		return playedSongsDAO.getTemporaryDB();
@@ -53,12 +77,12 @@ public class PlayedSongsService {
 		return playedSongsDAO.getPlayedSongs();
 	}
 
-	public List<TwoItemSet> getTwoItemSet() {
-		return playedSongsDAO.getTwoItemSet();
+	public List<Long> getTwoItemSet(String songId) {
+		return playedSongsDAO.getTwoItemSet(songId);
 	}
 
-	public List<ThreeItemSet> getThreeItemSet() {
-		return playedSongsDAO.getThreeItemSet();
+	public List<Long> getThreeItemSet(String songId) {
+		return playedSongsDAO.getThreeItemSet(songId);
 	}
 
 	public List<OneItemSetCount> getOneItemSetCount() {
@@ -69,23 +93,37 @@ public class PlayedSongsService {
 		return playedSongsDAO.checkIfPlayedSongExists(session_id, song_id);
 	}
 	
-	//DELETES
+	public List<Song> getSongs(List<Long> songIds){
+		return playedSongsDAO.getSongs(songIds);
+	}
 	
+	public void getRecommendation(String songId){
+		playedSongsDAO.getRecommendation(songId);
+	}
+
+	public void getRecommendation2(String songId){
+		playedSongsDAO.getRecommendation2(songId);
+	}
+	// DELETES
+
+	public void truncatePlayedSongsByTime() {
+		playedSongsDAO.truncatePlayedSongsByTime();
+	}
+
 	public void truncateTemporaryDB() {
 		playedSongsDAO.truncateTemporaryDB();
 	}
-	
-	public void truncateOneItemSetCount(){
+
+	public void truncateOneItemSetCount() {
 		playedSongsDAO.truncateOneSetItemCount();
 	}
-	
-	public void truncateTwoItemSet(){
+
+	public void truncateTwoItemSet() {
 		playedSongsDAO.truncateTwoItemSet();
 	}
-	
-	public void truncateThreeItemSet(){
+
+	public void truncateThreeItemSet() {
 		playedSongsDAO.truncateThreeItemSet();
 	}
 
-	
 }

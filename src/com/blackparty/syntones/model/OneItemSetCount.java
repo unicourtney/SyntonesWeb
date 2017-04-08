@@ -20,16 +20,21 @@ public class OneItemSetCount {
 
 	@Column(name = "count")
 	private int count;
+	
+	@Column(name = "support")
+	private double support;
 
 	public OneItemSetCount() {
 		super();
 	}
 
-	public OneItemSetCount(String track_id, int count) {
+	public OneItemSetCount(String track_id, int count, double support) {
 		super();
 		this.track_id = track_id;
 		this.count = count;
+		this.support = support;
 	}
+
 
 	public String getTrack_id() {
 		return track_id;
@@ -46,5 +51,19 @@ public class OneItemSetCount {
 	public void setCount(int count) {
 		this.count = count;
 	}
+
+
+
+	public double getSupport() {
+		return support;
+	}
+
+
+
+	public void setSupport(double support) {
+		this.support = support;
+	}
+	
+	
 
 }

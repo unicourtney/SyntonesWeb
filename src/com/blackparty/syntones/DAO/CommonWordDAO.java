@@ -27,6 +27,7 @@ public class CommonWordDAO {
 		query.setString("name", word);
 		commonWord = (CommonWord)query.uniqueResult();
 		session.flush();
+		session.clear();
 		session.close();
 		return commonWord;
 	}
@@ -37,6 +38,7 @@ public class CommonWordDAO {
 		Query query = session.createQuery("delete from CommonWord");
 		query.executeUpdate();
 		session.flush();
+		session.clear();
 		session.close();
 	}
 	
@@ -47,6 +49,7 @@ public class CommonWordDAO {
 			session.insert(cw);
 		}
 		trans.commit();
+		
 		session.close();
 	}
 	
@@ -57,6 +60,7 @@ public class CommonWordDAO {
 			Session session = sessionFactory.openSession();
 			session.save(commonWord);
 			session.flush();
+			session.clear();
 			session.close();
 		}else{
 			fetchedWord.setCount(count+fetchedWord.getCount());
@@ -69,6 +73,7 @@ public class CommonWordDAO {
 		session.update(word);
 		session.getTransaction().commit();
 		session.flush();
+		session.clear();
 		session.close();
 	}
 	

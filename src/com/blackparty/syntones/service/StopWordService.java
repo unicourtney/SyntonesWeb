@@ -11,7 +11,7 @@ import com.blackparty.syntones.DAO.StopWordDAO;
 public class StopWordService {
 	@Autowired private StopWordDAO stopwordDao;
 	
-	public List<String> getStopWords()throws Exception{
+	public List<String> getStopWords(){
 		return stopwordDao.getAllStopWords();
 	}
 }

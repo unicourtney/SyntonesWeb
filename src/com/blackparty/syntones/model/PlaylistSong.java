@@ -2,6 +2,8 @@ package com.blackparty.syntones.model;
 
 
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,10 +32,13 @@ public class PlaylistSong {
 		
 	}
 	
+	
 	public PlaylistSong(long songId,long playlistId){
 		this.songId = songId;
 		this.playlistId = playlistId;
 	}
+	
+	
 
 	public long getSongId() {
 		return songId;

@@ -43,14 +43,26 @@ public class Song {
 	@Transient
 	private int distance;
 	
-	@Column(name = "vector_space", columnDefinition = "text")
-	private String vectorSpace;
-
+	@Column(name="mood")
+	private String mood;
+	
+	@Column(name="genre")
+	private long genreId;
+	
+	
 	@Transient
 	private File file;
 
 	// connects the song to the artist class
 
+
+	@Column(nullable=false,name="flag")
+	private boolean flag;
+	
+	@Transient
+	private Genre genre;
+	
+	
 	@ManyToOne(optional = false)
 	@JoinColumn(referencedColumnName = "artist_id")
 	private Artist artist;
@@ -79,11 +91,15 @@ public class Song {
 	public void setArtist(Artist artist) {
 		this.artist = artist;
 	}
+	
+	
 
 	public Song(String songTitle, String artistName) {
 		this.artistName = artistName;
 		this.songTitle = songTitle;
 	}
+	
+	
 
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
@@ -144,14 +160,37 @@ public class Song {
 		return "Song[Song Title: "+songTitle+", Artist: "+artistName+" ]";
 	}
 	
-	
-	
-	public String getVectorSpace() {
-		return vectorSpace;
+
+	public boolean isFlag() {
+		return flag;
 	}
 
-	public void setVectorSpace(String vectorSpace) {
-		this.vectorSpace = vectorSpace;
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+	
+	public String getMood() {
+		return mood;
+	}
+
+	public void setMood(String mood) {
+		this.mood = mood;
+	}
+
+	public long getGenreId() {
+		return genreId;
+	}
+
+	public void setGenreId(long genreId) {
+		this.genreId = genreId;
+	}
+
+	public Genre getGenre() {
+		return genre;
+	}
+
+	public void setGenre(Genre genre) {
+		this.genre = genre;
 	}
 
 	@Override
@@ -159,7 +198,9 @@ public class Song {
 		return "Song [songId=" + songId + ", songTitle=" + songTitle + ", artist= " + artistName + "]";
 	}
 	public String toStringFromDB() {
-		return "Song [songId=" + songId + ", songTitle=" + songTitle + ", artist= " + artist.getArtistName() + "]";
+		return "Song [songId=" + songId + ", songTitle=" + songTitle + ", artist= " + artist.getArtistName() + "mood= "+mood+" ]";
 	}
-
+	public String printTitleAndArtist(){
+		return "Song [songTitle=" + songTitle + ", artist= " + artistName + "]";
+	}
 }

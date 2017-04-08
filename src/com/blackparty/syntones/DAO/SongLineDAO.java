@@ -23,6 +23,7 @@ public class SongLineDAO {
 		Session session = sessionFactory.openSession();
 		session.save(songLine);
 		session.flush();
+		session.clear();
 		session.close();
 	}
 	
@@ -30,6 +31,7 @@ public class SongLineDAO {
 		Session session = sessionFactory.openSession();
 		session.createSQLQuery("truncate table song_line_tbl").executeUpdate();
 		session.flush();
+		session.clear();
 		session.close();
 		System.out.println("SongLine Table is truncated;");
 	}
@@ -48,6 +50,7 @@ public class SongLineDAO {
 		Query query = session.createQuery("from SongLine group by line order by result desc");
 		List<SongLine> lines = query.list();
 		session.flush();
+		session.clear();
 		session.close();
 		return lines;
 	}
@@ -55,6 +58,9 @@ public class SongLineDAO {
 		Session session = sessionFactory.openSession();
 		Query query = session.createSQLQuery("select distinct song_song_id from song_line_tbl").addScalar("song_song_id",LongType.INSTANCE);
 		List<Long> songIdList = query.list();
+		session.flush();
+		session.clear();
+		session.close();
 		return songIdList;
 	}
 }

@@ -15,23 +15,30 @@ import com.blackparty.syntones.model.Song;
 @Service
 public class PlaylistSongService {
 
-	@Autowired PlaylistSongDAO playlistSongDao;
-	public void addToplaylist(PlaylistSong playlistSong) throws Exception{
+	@Autowired
+	PlaylistSongDAO playlistSongDao;
+
+	public void addToplaylist(PlaylistSong playlistSong) throws Exception {
 		playlistSongDao.addToplaylist(playlistSong);
 	}
-	
-	public List<Song> getSongs(long playlistId) throws Exception{
+
+	public List<Song> getSongs(long playlistId) throws Exception {
 		return playlistSongDao.getSongs(playlistId);
 	}
-	
-	public void savebatchPlaylistSong(List<PlaylistSong> songs)throws Exception{
+
+	public void savebatchPlaylistSong(List<PlaylistSong> songs) throws Exception {
 		playlistSongDao.savebatchPlaylistSong(songs);
 	}
-	
-	public void removeToPlaylist(PlaylistSong playlistSong)throws Exception{
+
+	public void removeToPlaylist(PlaylistSong playlistSong) throws Exception {
 		playlistSongDao.removeToPlaylist(playlistSong);
 	}
-	public void removePlaylist(Playlist playlist){
+
+	public void removePlaylist(Playlist playlist) {
 		playlistSongDao.removePlaylist(playlist);
+	}
+
+	public List<Long> checkIfSongExists(List<PlaylistSong> playlistSong) {
+		return playlistSongDao.checkIfSongExists(playlistSong);
 	}
 }

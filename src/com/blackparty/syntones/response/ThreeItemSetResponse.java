@@ -3,20 +3,21 @@ package com.blackparty.syntones.response;
 import java.util.List;
 
 import com.blackparty.syntones.model.Message;
+import com.blackparty.syntones.model.Song;
 import com.blackparty.syntones.model.ThreeItemSet;
 
 public class ThreeItemSetResponse {
 	private Message message;
-	private List<ThreeItemSet> three_item_set_list;
+	private List<Song> songList;
 
 	public ThreeItemSetResponse() {
 		super();
 	}
 
-	public ThreeItemSetResponse(Message message, List<ThreeItemSet> three_item_set_list) {
+	public ThreeItemSetResponse(Message message, List<Song> songList) {
 		super();
 		this.message = message;
-		this.three_item_set_list = three_item_set_list;
+		this.songList = songList;
 	}
 
 	public Message getMessage() {
@@ -27,12 +28,12 @@ public class ThreeItemSetResponse {
 		this.message = message;
 	}
 
-	public List<ThreeItemSet> getThree_item_set_list() {
-		return three_item_set_list;
+	public List<Song> getSongList() {
+		return songList;
 	}
 
-	public void setThree_item_set_list(List<ThreeItemSet> three_item_set_list) {
-		this.three_item_set_list = three_item_set_list;
+	public void setSongList(List<Song> songList) {
+		this.songList = songList;
 	}
 
 }

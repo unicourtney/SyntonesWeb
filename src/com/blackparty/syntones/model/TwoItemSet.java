@@ -21,27 +21,32 @@ public class TwoItemSet {
 	@Column(name = "count")
 	private int count;
 
+	@Column(name = "support")
+	private double support;
+	
 	@Column(name = "confidence")
-	private float confidence;
+	private double confidence;
 
 	@Column(name = "recom_song")
-	private String recom_song;
+	private long recom_song;
 
 	public TwoItemSet() {
 		super();
 	}
 
-	public TwoItemSet(String track_id, int count) {
+	public TwoItemSet(String track_id, int count, double support) {
 		super();
 		this.track_id = track_id;
 		this.count = count;
+		this.support = support;
 	}
 
-	public TwoItemSet(String track_id, String recom_song, int count, float confidence) {
+	public TwoItemSet(String track_id, long recom_song, int count, double support, double confidence) {
 		super();
 		this.track_id = track_id;
 		this.count = count;
 		this.confidence = confidence;
+		this.support = support;
 		this.recom_song = recom_song;
 	}
 
@@ -61,20 +66,30 @@ public class TwoItemSet {
 		this.count = count;
 	}
 
-	public float getConfidence() {
+	public double getConfidence() {
 		return confidence;
 	}
 
-	public void setConfidence(float confidence) {
+	public void setConfidence(double confidence) {
 		this.confidence = confidence;
 	}
 
-	public String getRecom_song() {
+	public long getRecom_song() {
 		return recom_song;
 	}
 
-	public void setRecom_song(String recom_song) {
+	public void setRecom_song(long recom_song) {
 		this.recom_song = recom_song;
 	}
+
+	public double getSupport() {
+		return support;
+	}
+
+	public void setSupport(double support) {
+		this.support = support;
+	}
+	
+	
 
 }

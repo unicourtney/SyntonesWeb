@@ -1,45 +1,40 @@
 package com.blackparty.syntones.model;
 
 public class SearchModel {
-	private long id;
-	private int[] vector;
-	private float cos_angle;
-	private float degrees;
+	private long sid;
+	private long aid;
+	private float degree;
 	
 	public SearchModel(){
 		
 	}
 
-	public long getId() {
-		return id;
+	public long getSongId() {
+		return sid;
+	}
+	
+	public long getArtistId(){
+		return aid;
+	}
+	
+	public void setArtistId(long aid){
+		this.aid = aid;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setSongId(long sid) {
+		this.sid = sid;
 	}
 
-	public int[] getVector() {
-		return vector;
+	public float getDegree() {
+		return degree;
 	}
 
-	public void setVector(int[] vector) {
-		this.vector = vector;
+	public void setDegree(float degree) {
+		this.degree = degree;
 	}
 
-	public float getCos_angle() {
-		return cos_angle;
-	}
 
-	public void setCos_angle(float cos_angle) {
-		this.cos_angle = cos_angle;
-	}
+	
 
-	public float getDegrees() {
-		return degrees;
-	}
-
-	public void setDegrees(float degrees) {
-		this.degrees = degrees;
-	}
 	
 }

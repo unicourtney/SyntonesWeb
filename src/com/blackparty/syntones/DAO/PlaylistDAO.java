@@ -41,6 +41,7 @@ public class PlaylistDAO {
 		query.setLong("id", playlist.getPlaylistId());
 		query.executeUpdate();
 		session.flush();
+		session.clear();
 		session.close();
 
 	}
@@ -52,6 +53,7 @@ public class PlaylistDAO {
 		Session session = sessionFactory.openSession();
 		long playlistId = (long) session.save(playlist);
 		session.flush();
+		session.clear();
 		session.close();
 		return playlistId;
 	}
@@ -64,6 +66,7 @@ public class PlaylistDAO {
 		Session session = sessionFactory.openSession();
 		session.save(playlist);
 		session.flush();
+		session.clear();
 		session.close();
 	}
 
@@ -84,6 +87,7 @@ public class PlaylistDAO {
 		fetchedPlaylist.setSongs(songList);
 		fetchedPlaylist.setPlaylistName((String) query.uniqueResult());
 		session.flush();
+		session.clear();
 		session.close();
 
 		return fetchedPlaylist;
@@ -99,8 +103,11 @@ public class PlaylistDAO {
 		query.setLong("id", fetchedUser.getUserId());
 		List<Playlist> playlists = query.list();
 		session.flush();
+		session.clear();
 		session.close();
 		return playlists;
 	}
+
+
 
 }

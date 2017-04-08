@@ -20,60 +20,93 @@ import com.blackparty.syntones.service.SongService;
 @Repository
 @Transactional
 public class PlaylistSongDAO {
-	@Autowired private SessionFactory sessionFactory;
-	@Autowired private SongService songService;
-	
-	public void removeToPlaylist(PlaylistSong playlistSong)throws Exception{
+	@Autowired
+	private SessionFactory sessionFactory;
+	@Autowired
+	private SongService songService;
+
+	public void removeToPlaylist(PlaylistSong playlistSong) throws Exception {
 		Session session = sessionFactory.openSession();
 		Query query = session.createQuery("delete PlaylistSong where songId=:sId and playlistId=:pId");
-		query.setLong("sId",playlistSong.getSongId());
-		query.setLong("pId",playlistSong.getPlaylistId());
+		query.setLong("sId", playlistSong.getSongId());
+		query.setLong("pId", playlistSong.getPlaylistId());
 		query.executeUpdate();
 		session.flush();
+		session.clear();
 		session.close();
 	}
-	
-	
-	public void savebatchPlaylistSong(List<PlaylistSong> songs)throws Exception{
+
+	public void savebatchPlaylistSong(List<PlaylistSong> songs) throws Exception {
 		StatelessSession session = sessionFactory.openStatelessSession();
 		Transaction trans = session.beginTransaction();
-		for(PlaylistSong ps:songs){
+		for (PlaylistSong ps : songs) {
 			session.insert(ps);
 		}
 		trans.commit();
 		session.close();
 	}
-	
-	public void removePlaylist(Playlist playlist){
+
+	public void removePlaylist(Playlist playlist) {
 		Session session = sessionFactory.openSession();
 		Query query = session.createQuery("delete PlaylistSong where playlistId=:id");
 		query.setLong("id", playlist.getPlaylistId());
 		query.executeUpdate();
 		session.flush();
+		session.clear();
 		session.close();
 	}
-	public void addToplaylist(PlaylistSong playlistSong) throws Exception{
+
+	public void addToplaylist(PlaylistSong playlistSong) throws Exception {
 		Session session = sessionFactory.openSession();
 		session.save(playlistSong);
 		session.flush();
+		session.clear();
 		session.close();
 	}
-	public List<Song> getSongs(long playlistId) throws Exception{
+
+	public List<Song> getSongs(long playlistId) throws Exception {
 		Session session = sessionFactory.openSession();
-		Query query =  session.createQuery("select songId from PlaylistSong where playlistId = :id");
+		Query query = session.createQuery("select songId from PlaylistSong where playlistId = :id");
 		query.setLong("id", playlistId);
 		List<Long> songIds = query.list();
 		List<Song> songs = new ArrayList<>();
-		for(long s:songIds){
+		for (long s : songIds) {
 			Song song = songService.getSong(s);
 			songs.add(song);
 		}
 		System.out.println("From DAO:");
-		for(Song s : songs){
+		for (Song s : songs) {
 			System.out.println(s.toString());
 		}
 		session.flush();
+		session.clear();
 		session.close();
 		return songs;
+	}
+
+	public List<Long> checkIfSongExists(List<PlaylistSong> playlistSong) {
+		System.out.println("===================================================================checkIfSongExists");
+		List<Long> notExistingSongs = new ArrayList<>();
+		Session session = sessionFactory.openSession();
+
+		for (PlaylistSong a : playlistSong) {
+			System.out.println("SENT\n" + "Playlist: " + a.getPlaylistId() + "\nSong: " + a.getSongId());
+			Query query = session.createQuery("from PlaylistSong where playlistId=:playlistId AND songId=:songId");
+			query.setLong("playlistId", a.getPlaylistId());
+			query.setLong("songId", a.getSongId());
+
+			PlaylistSong playlistSongRes = (PlaylistSong) query.uniqueResult();
+
+			if (playlistSongRes == null) {
+
+				notExistingSongs.add(a.getSongId());
+			}
+		}
+
+		session.flush();
+		session.clear();
+		session.close();
+
+		return notExistingSongs;
 	}
 }

@@ -25,6 +25,7 @@ public class UserDAO {
 			Session session = sf.openSession();
 			session.save(user);
 			session.flush();
+			session.clear();
 			session.close();
 			message.setFlag(true);
 			message.setMessage(user.getUsername()+" is succesfully added.");
@@ -32,6 +33,7 @@ public class UserDAO {
 			message.setMessage("username is already existed.");
 			message.setFlag(false);
 		}
+		
 		return message;
 	}
 	
@@ -46,6 +48,7 @@ public class UserDAO {
 			return null;
 		}
 		session.flush();
+		session.clear();
 		session.close();
 
 		System.out.println("Unique result :"+fetchedUser.toString());

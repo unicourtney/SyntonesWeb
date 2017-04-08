@@ -17,13 +17,18 @@ import com.blackparty.syntones.model.StopWord;
 public class StopWordDAO {
 	@Autowired private SessionFactory sessionFactory;
 	
-	public List<String> getAllStopWords()throws Exception{
-		List<String> stopWords = new ArrayList<>();
+	@SuppressWarnings("unchecked")
+	public List<String> getAllStopWords(){
+		try{
 		Session session = sessionFactory.openSession();
 		Query query = session.createQuery("select word from StopWord");
-		stopWords = query.list();
+		List<String> stopWords = query.list();
 		session.flush();
 		session.close();
 		return stopWords;
+		}catch(Exception e){
+			System.out.println("Exception @ getStopWords >> e"+e);
+			return null;
+		}
 	}
 }
